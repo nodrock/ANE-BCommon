@@ -1,0 +1,6 @@
+<platform xmlns="http://ns.adobe.com/air/extension/18.0">
+    <packagedDependencies>
+        <!--<packagedDependency>annotations.jar</packagedDependency>-->
+        <!--<packagedDependency>android-support-v4.jar</packagedDependency>-->
+    </packagedDependencies>
+</platform>
