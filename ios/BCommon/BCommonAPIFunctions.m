@@ -54,7 +54,7 @@ DEFINE_ANE_FUNCTION(getIDFATrackingEnabled)
 {
     BOOL advertisingTrackingEnabled = [[ASIdentifierManager sharedManager] isAdvertisingTrackingEnabled];
     
-    [BCommon log:@"advertisingTrackingEnabled: %@", advertisingTrackingEnabled];
+    [BCommon log:@"advertisingTrackingEnabled: %@", (advertisingTrackingEnabled ? @"YES" : @"NO")];
     
     return [FREConversionUtil fromBoolean:advertisingTrackingEnabled];
 }
