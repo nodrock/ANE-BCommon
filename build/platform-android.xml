@@ -2,5 +2,12 @@
     <packagedDependencies>
         <!--<packagedDependency>annotations.jar</packagedDependency>-->
         <!--<packagedDependency>android-support-v4.jar</packagedDependency>-->
+        <packagedDependency>google-play-services.jar</packagedDependency>
     </packagedDependencies>
+    <packagedResources>
+        <packagedResource>
+            <packageName>com.google.android.gms</packageName>
+            <folderName>google-play-services-res</folderName>
+        </packagedResource>
+    </packagedResources>
 </platform>

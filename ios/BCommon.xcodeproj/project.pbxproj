@@ -7,9 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E0420871BB41E0F00DEBE7B /* BCommonAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E0420861BB41E0F00DEBE7B /* BCommonAPI.m */; settings = {ASSET_TAGS = (); }; };
+		2E0420891BB41E2700DEBE7B /* BCommonAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E0420881BB41E2700DEBE7B /* BCommonAPI.h */; settings = {ASSET_TAGS = (); }; };
+		2E04208B1BB41EF200DEBE7B /* BCommonAPIFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E04208A1BB41EF200DEBE7B /* BCommonAPIFunctions.m */; settings = {ASSET_TAGS = (); }; };
+		2E04208D1BB41F3600DEBE7B /* BCommonAPIFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E04208C1BB41F3600DEBE7B /* BCommonAPIFunctions.h */; settings = {ASSET_TAGS = (); }; };
+		2E0420901BB423B200DEBE7B /* FREConversionUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E04208E1BB423B200DEBE7B /* FREConversionUtil.h */; settings = {ASSET_TAGS = (); }; };
+		2E0420911BB423B200DEBE7B /* FREConversionUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E04208F1BB423B200DEBE7B /* FREConversionUtil.m */; settings = {ASSET_TAGS = (); }; };
 		2E14AA431B1377E200453D81 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E14AA421B1377E200453D81 /* CoreMotion.framework */; };
-		2E9EEA711B42A8B900B9370E /* FREConversionUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E9EEA6F1B42A8B900B9370E /* FREConversionUtil.h */; };
-		2E9EEA721B42A8B900B9370E /* FREConversionUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E9EEA701B42A8B900B9370E /* FREConversionUtil.m */; };
+		2EA4CF6A1BB98958004C3F46 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA4CF691BB98958004C3F46 /* AdSupport.framework */; };
 		2EC5A13A1B9D7F5700335CC3 /* BCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC5A1391B9D7F5700335CC3 /* BCommon.h */; };
 		2EC5A13B1B9D7FD600335CC3 /* BCommon-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = E25E190A18525A56005798D2 /* BCommon-Prefix.pch */; };
 		4AAA25071703433600ECB60C /* FlashRuntimeExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4AAA25061703433600ECB60C /* FlashRuntimeExtensions.h */; };
@@ -17,14 +22,17 @@
 		5A9856A215213BC3003A8EB0 /* BCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A9856A115213BC3003A8EB0 /* BCommon.m */; };
 		FAA4F39417D78A12005A862A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AAA25371704F1C400ECB60C /* UIKit.framework */; };
 		FAA4F39517D78A17005A862A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AAA253A1704F1C400ECB60C /* CoreGraphics.framework */; };
-		FAD87E6B1822EC3200A4D717 /* FPANEUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = FAD87E691822EC3200A4D717 /* FPANEUtils.h */; };
-		FAD87E6C1822EC3200A4D717 /* FPANEUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FAD87E6A1822EC3200A4D717 /* FPANEUtils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E0420861BB41E0F00DEBE7B /* BCommonAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BCommonAPI.m; path = BCommon/BCommonAPI.m; sourceTree = "<group>"; };
+		2E0420881BB41E2700DEBE7B /* BCommonAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BCommonAPI.h; path = BCommon/BCommonAPI.h; sourceTree = "<group>"; };
+		2E04208A1BB41EF200DEBE7B /* BCommonAPIFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BCommonAPIFunctions.m; path = BCommon/BCommonAPIFunctions.m; sourceTree = "<group>"; };
+		2E04208C1BB41F3600DEBE7B /* BCommonAPIFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BCommonAPIFunctions.h; path = BCommon/BCommonAPIFunctions.h; sourceTree = "<group>"; };
+		2E04208E1BB423B200DEBE7B /* FREConversionUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FREConversionUtil.h; sourceTree = SOURCE_ROOT; };
+		2E04208F1BB423B200DEBE7B /* FREConversionUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FREConversionUtil.m; sourceTree = SOURCE_ROOT; };
 		2E14AA421B1377E200453D81 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		2E9EEA6F1B42A8B900B9370E /* FREConversionUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FREConversionUtil.h; sourceTree = "<group>"; };
-		2E9EEA701B42A8B900B9370E /* FREConversionUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FREConversionUtil.m; sourceTree = "<group>"; };
+		2EA4CF691BB98958004C3F46 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		2EB172991B77DE920074351E /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2EC5A1391B9D7F5700335CC3 /* BCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCommon.h; sourceTree = "<group>"; };
 		4AAA25061703433600ECB60C /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = ../FlashRuntimeExtensions.h; sourceTree = "<group>"; };
@@ -34,8 +42,6 @@
 		5A98569B15213BC3003A8EB0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5A9856A115213BC3003A8EB0 /* BCommon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BCommon.m; sourceTree = "<group>"; };
 		E25E190A18525A56005798D2 /* BCommon-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BCommon-Prefix.pch"; sourceTree = "<group>"; };
-		FAD87E691822EC3200A4D717 /* FPANEUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPANEUtils.h; sourceTree = "<group>"; };
-		FAD87E6A1822EC3200A4D717 /* FPANEUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPANEUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2EA4CF6A1BB98958004C3F46 /* AdSupport.framework in Frameworks */,
 				2E14AA431B1377E200453D81 /* CoreMotion.framework in Frameworks */,
 				FAA4F39517D78A17005A862A /* CoreGraphics.framework in Frameworks */,
 				FAA4F39417D78A12005A862A /* UIKit.framework in Frameworks */,
@@ -56,6 +63,10 @@
 		5A98568D15213BC2003A8EB0 = {
 			isa = PBXGroup;
 			children = (
+				2E0420881BB41E2700DEBE7B /* BCommonAPI.h */,
+				2E0420861BB41E0F00DEBE7B /* BCommonAPI.m */,
+				2E04208C1BB41F3600DEBE7B /* BCommonAPIFunctions.h */,
+				2E04208A1BB41EF200DEBE7B /* BCommonAPIFunctions.m */,
 				5A98569E15213BC3003A8EB0 /* Supporting Files */,
 				5A98569D15213BC3003A8EB0 /* BCommon */,
 				5A98569A15213BC3003A8EB0 /* Frameworks */,
@@ -74,6 +85,7 @@
 		5A98569A15213BC3003A8EB0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2EA4CF691BB98958004C3F46 /* AdSupport.framework */,
 				2EB172991B77DE920074351E /* StoreKit.framework */,
 				2E14AA421B1377E200453D81 /* CoreMotion.framework */,
 				4AAA25371704F1C400ECB60C /* UIKit.framework */,
@@ -95,12 +107,10 @@
 		5A98569E15213BC3003A8EB0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2E04208E1BB423B200DEBE7B /* FREConversionUtil.h */,
+				2E04208F1BB423B200DEBE7B /* FREConversionUtil.m */,
 				4AAA25061703433600ECB60C /* FlashRuntimeExtensions.h */,
-				FAD87E691822EC3200A4D717 /* FPANEUtils.h */,
-				FAD87E6A1822EC3200A4D717 /* FPANEUtils.m */,
 				E25E190A18525A56005798D2 /* BCommon-Prefix.pch */,
-				2E9EEA6F1B42A8B900B9370E /* FREConversionUtil.h */,
-				2E9EEA701B42A8B900B9370E /* FREConversionUtil.m */,
 			);
 			name = "Supporting Files";
 			path = BCommon;
@@ -115,9 +125,10 @@
 			files = (
 				2EC5A13B1B9D7FD600335CC3 /* BCommon-Prefix.pch in Headers */,
 				4AAA25071703433600ECB60C /* FlashRuntimeExtensions.h in Headers */,
+				2E04208D1BB41F3600DEBE7B /* BCommonAPIFunctions.h in Headers */,
 				2EC5A13A1B9D7F5700335CC3 /* BCommon.h in Headers */,
-				2E9EEA711B42A8B900B9370E /* FREConversionUtil.h in Headers */,
-				FAD87E6B1822EC3200A4D717 /* FPANEUtils.h in Headers */,
+				2E0420901BB423B200DEBE7B /* FREConversionUtil.h in Headers */,
+				2E0420891BB41E2700DEBE7B /* BCommonAPI.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,9 +182,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAD87E6C1822EC3200A4D717 /* FPANEUtils.m in Sources */,
+				2E04208B1BB41EF200DEBE7B /* BCommonAPIFunctions.m in Sources */,
+				2E0420871BB41E0F00DEBE7B /* BCommonAPI.m in Sources */,
 				5A9856A215213BC3003A8EB0 /* BCommon.m in Sources */,
-				2E9EEA721B42A8B900B9370E /* FREConversionUtil.m in Sources */,
+				2E0420911BB423B200DEBE7B /* FREConversionUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

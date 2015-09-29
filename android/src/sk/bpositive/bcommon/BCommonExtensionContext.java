@@ -21,6 +21,7 @@ public class BCommonExtensionContext extends FREContext
 		Map<String, FREFunction> functions = new HashMap<String, FREFunction>();
 
 		functions.put("flagKeepScreenOn", new FlagKeepScreenOn());
+		functions.put("getAAID", new GetAAIDFunction());
 
 		// Debug
 		functions.put("nativeLog", new NativeLogFunction());

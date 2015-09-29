@@ -7,7 +7,7 @@ import flash.system.Capabilities;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.0";
+    public static const VERSION:String = "1.0.1";
 
     private var _initialized:Boolean;
 
@@ -81,12 +81,73 @@ public class BCommon extends EventDispatcher {
         }
     }
 
+    public function getIDFV():String
+    {
+        if (_initialized) {
+
+            if(isIOS()){
+
+                return _context.call("getIDFV") as String;
+            }else{
+
+                log("This method is supported only on iOS!");
+                return null;
+            }
+        } else {
+
+            log("You must call init() before any other method!");
+            return null;
+        }
+    }
+
+    public function getIDFA():BCommonIDFA
+    {
+        if (_initialized) {
+
+            if(isIOS()){
+
+                var id:String = _context.call("getIDFA") as String;
+                var trackingEnabled:Boolean = _context.call("getIDFATrackingEnabled") as Boolean;
+                return BCommonIDFA.createFrom(id, trackingEnabled);
+            }else{
+
+                log("This method is supported only on iOS!");
+                return null;
+            }
+        } else {
+
+            log("You must call init() before any other method!");
+            return null;
+        }
+    }
+
+    public function getAAID():void
+    {
+        if (_initialized) {
+
+            if(isAndroid()){
+
+                _context.call("getAAID");
+            }else{
+
+                log("This method is supported only on Android!");
+            }
+        } else {
+
+            log("You must call init() before any other method!");
+        }
+    }
+
     public function setFlagKeepScreenOn(value:Boolean):void
     {
         if(_initialized) {
+
             if (isAndroid()) {
 
                 _context.call("flagKeepScreenOn", value);
+            }else{
+
+                log("This method is supported only on Android!");
             }
         } else {
 
@@ -138,17 +199,61 @@ public class BCommon extends EventDispatcher {
         var dataArr:Array;
         var callbackName:String;
         var callback:Function;
+        var data:Object;
 
         if (event.code == "LOGGING") // Simple log message
         {
             // NOTE: logs from native should go only to as3 log
             as3Log(event.level, "NATIVE");
         }
+        else if(event.code == "NOTIFICATION")
+        {
+            try {
+                data = JSON.parse(event.level);
+
+                if(data.hasOwnProperty("type")){
+
+                    var type:String = data["type"];
+                    if(type == "MEMORY_WARNING"){
+
+                        log("NOTIFICATION: MEMORY_WARNING");
+                        if(hasEventListener(BCommonEvent.MEMORY_WARNING)){
+
+                            dispatchEvent(new BCommonEvent(BCommonEvent.MEMORY_WARNING, false, false));
+                        }
+                    }
+                }
+            }
+            catch (e:Error) {
+                log("ERROR - INVALID NOTIFICATION RECEIVED! raw:" + event.level + " error:" + e);
+            }
+        }
+        else if(event.code.indexOf("AAID") != 0)
+        {
+            dataArr = event.code.split("_");
+            var aaidEvent:BCommonAAIDEvent;
+            if(dataArr[1] == "COMPLETED"){
+
+                if(hasEventListener(BCommonAAIDEvent.AAID_COMPLETED)){
+
+                    aaidEvent = new BCommonAAIDEvent(BCommonAAIDEvent.AAID_COMPLETED, false, false);
+                    aaidEvent.aaid = BCommonAAID.createFromJSON(event.level);
+                    dispatchEvent(aaidEvent);
+                }
+            }else if(dataArr[1] == "FAILED"){
+
+                if(hasEventListener(BCommonAAIDEvent.AAID_FAILED)){
+
+                    aaidEvent = new BCommonAAIDEvent(BCommonAAIDEvent.AAID_FAILED, false, false);
+                    // TODO: error
+                    dispatchEvent(aaidEvent);
+                }
+            }
+        }
         else // Default case: we check for a registered callback associated with the event code
         {
             if (_requestCallbacks.hasOwnProperty(event.code)) {
                 callback = _requestCallbacks[event.code];
-                var data:Object;
 
                 if (callback != null) {
                     try {

@@ -17,30 +17,19 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 #import "FlashRuntimeExtensions.h"
-#import "FPANEUtils.h"
 
-@interface AirFacebook : NSObject
+@interface BCommon : NSObject
 
 + (id)sharedInstance;
 
-+ (void)dispatchEvent:(NSString *)event withMessage:(NSString *)message;
+- (void)dispatchEvent:(NSString *)event withMessage:(NSString *)message;
 + (void)log:(NSString *)string, ...;
++ (void)nativeLog:(NSString *)message withPrefix:(NSString *)prefix;
 + (NSString*) jsonStringFromObject:(id)obj andPrettyPrint:(BOOL) prettyPrint;
 
-//- (void)didFinishLaunching:(NSNotification *)notification;
+- (void)didReceiveMemoryWarning:(NSNotification *)notification;
 
 @property (nonatomic, getter=isNativeLogEnabled) BOOL nativeLogEnabled;
+@property (nonatomic) FREContext context;
 
 @end
-
-// C interface
-
-// Debug
-DEFINE_ANE_FUNCTION(nativeLog);
-DEFINE_ANE_FUNCTION(setNativeLogEnabled);
-
-// ANE Setup
-void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet);
-void BCommonContextFinalizer(FREContext ctx);
-void BCommonInitializer(void** extDataToSet, FREContextInitializer* ctxInitializerToSet, FREContextFinalizer* ctxFinalizerToSet);
-void BCommonFinalizer(void *extData);

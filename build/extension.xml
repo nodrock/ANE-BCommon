@@ -29,13 +29,29 @@
         </applicationDeployment>
     </platform>
 
+    <platform name="iPhone-x86">
+        <applicationDeployment>
+            <nativeLibrary>libBCommon.a</nativeLibrary>
+            <initializer>BCommonInitializer</initializer>
+            <finalizer>BCommonFinalizer</finalizer>
+        </applicationDeployment>
+    </platform>
+
     <platform name="Android-ARM"> 
         <applicationDeployment> 
             <nativeLibrary>libBCommon.jar</nativeLibrary>
             <initializer>sk.bpositive.bcommon.BCommonExtension</initializer>
             <finalizer>sk.bpositive.bcommon.BCommonExtension</finalizer>
         </applicationDeployment> 
-    </platform> 
+    </platform>
+
+    <platform name="Android-x86">
+        <applicationDeployment>
+            <nativeLibrary>libBCommon.jar</nativeLibrary>
+            <initializer>sk.bpositive.bcommon.BCommonExtension</initializer>
+            <finalizer>sk.bpositive.bcommon.BCommonExtension</finalizer>
+        </applicationDeployment>
+    </platform>
     
     <platform name="default"> 
         <applicationDeployment/> 

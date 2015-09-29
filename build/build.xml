@@ -62,6 +62,7 @@
         <!-- Copy over the required libs -->
         <!--<copy file="../android/libs/android-support-v4.jar" todir="temp/android/"/>-->
         <!--<copy file="${android.sdk}/tools/lib/annotations.jar" todir="temp/android/"/>-->
+        <copy file="../android/libs/google-play-services.jar" todir="temp/android/"/>
 
         <unzip src="../android/build/outputs/aar/android-release.aar" dest="../android/build/aar" overwrite="true"/>
 
@@ -71,6 +72,9 @@
         <!--<copy todir="temp/android/res/">-->
             <!--<fileset dir="../android/res/"/>-->
         <!--</copy>-->
+        <copy todir="temp/android/google-play-services-res/">
+            <fileset dir="../android/libs/google-play-services-res/"/>
+        </copy>
 
         <!-- remove the build classes -->
         <delete dir="../android/build"/>
@@ -117,7 +121,9 @@
             <arg value="../extension.xml"/>
             <arg line="-swc swc/${name}.swc"/>
             <arg line="-platform iPhone-ARM -platformoptions ../platform-ios.xml -C ios/ ."/>
+            <arg line="-platform iPhone-x86 -platformoptions ../platform-ios.xml -C ios/ ."/>
             <arg line="-platform Android-ARM -platformoptions ../platform-android.xml -C android/ ."/>
+            <arg line="-platform Android-x86 -platformoptions ../platform-android.xml -C android/ ."/>
             <arg line="-platform default -C default/ ."/>
         </exec>
 
