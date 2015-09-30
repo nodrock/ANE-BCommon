@@ -21,6 +21,8 @@ public class GetAAIDFunction implements FREFunction {
 	
 	public FREObject call(FREContext ctx, FREObject[] args) {
 
+		BCommonExtension.log("GetAAIDFunction");
+
 		final Context	context		= ctx.getActivity().getApplicationContext();
 
 		int connectionResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);

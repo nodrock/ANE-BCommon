@@ -1,13 +1,28 @@
 <platform xmlns="http://ns.adobe.com/air/extension/18.0">
     <packagedDependencies>
-        <!--<packagedDependency>annotations.jar</packagedDependency>-->
-        <!--<packagedDependency>android-support-v4.jar</packagedDependency>-->
-        <packagedDependency>google-play-services.jar</packagedDependency>
+        <packagedDependency>android-support-v4.jar</packagedDependency>
+        <packagedDependency>play-services-ads-7.8.0.jar</packagedDependency>
+        <packagedDependency>play-services-analytics-7.8.0.jar</packagedDependency>
+        <packagedDependency>play-services-base-7.8.0.jar</packagedDependency>
+        <packagedDependency>play-services-appindexing-7.8.0.jar</packagedDependency>
     </packagedDependencies>
     <packagedResources>
         <packagedResource>
-            <packageName>com.google.android.gms</packageName>
-            <folderName>google-play-services-res</folderName>
+            <packageName>com.google.android.gms.ads</packageName>
+            <folderName>play-services-ads-7.8.0-res</folderName>
         </packagedResource>
+        <packagedResource>
+            <packageName>com.google.android.gms.analytics</packageName>
+            <folderName>play-services-analytics-7.8.0-res</folderName>
+        </packagedResource>
+        <packagedResource>
+            <packageName>com.google.android.gms</packageName>
+            <folderName>play-services-base-7.8.0-res</folderName>
+        </packagedResource>
+        <!-- This resource folder is empty so we don't need to put it here -->
+        <!--<packagedResource>-->
+            <!--<packageName>com.google.android.gms.appindexing</packageName>-->
+            <!--<folderName>play-services-appindexing-7.8.0-res</folderName>-->
+        <!--</packagedResource>-->
     </packagedResources>
 </platform>

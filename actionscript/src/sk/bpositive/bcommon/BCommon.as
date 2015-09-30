@@ -228,7 +228,7 @@ public class BCommon extends EventDispatcher {
                 log("ERROR - INVALID NOTIFICATION RECEIVED! raw:" + event.level + " error:" + e);
             }
         }
-        else if(event.code.indexOf("AAID") != 0)
+        else if(event.code.indexOf("AAID") != -1)
         {
             dataArr = event.code.split("_");
             var aaidEvent:BCommonAAIDEvent;
