@@ -7,7 +7,7 @@ import flash.system.Capabilities;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.2";
+    public static const VERSION:String = "1.0.3";
 
     private var _initialized:Boolean;
 
@@ -23,12 +23,12 @@ public class BCommon extends EventDispatcher {
         return isIOS() || isAndroid();
     }
 
-    private static function isIOS():Boolean
+    public static function isIOS():Boolean
     {
         return Capabilities.version.indexOf("IOS") != -1;
     }
 
-    private static function isAndroid():Boolean
+    public static function isAndroid():Boolean
     {
         return Capabilities.version.indexOf("AND") != -1;
     }
@@ -91,6 +91,25 @@ public class BCommon extends EventDispatcher {
             }else{
 
                 log("This method is supported only on iOS!");
+                return null;
+            }
+        } else {
+
+            log("You must call init() before any other method!");
+            return null;
+        }
+    }
+
+    public function getAndroidId():String
+    {
+        if (_initialized) {
+
+            if(isAndroid()){
+
+                return _context.call("getAndroidId") as String;
+            }else{
+
+                log("This method is supported only on Android!");
                 return null;
             }
         } else {
@@ -245,7 +264,7 @@ public class BCommon extends EventDispatcher {
                 if(hasEventListener(BCommonAAIDEvent.AAID_FAILED)){
 
                     aaidEvent = new BCommonAAIDEvent(BCommonAAIDEvent.AAID_FAILED, false, false);
-                    // TODO: error
+                    aaidEvent.error = BCommonErrorObject.createFromJSON(event.level);
                     dispatchEvent(aaidEvent);
                 }
             }
