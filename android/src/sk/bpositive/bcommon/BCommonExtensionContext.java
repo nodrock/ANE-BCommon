@@ -23,6 +23,7 @@ public class BCommonExtensionContext extends FREContext
 		functions.put("flagKeepScreenOn", new FlagKeepScreenOn());
 		functions.put("getAAID", new GetAAIDFunction());
 		functions.put("getAndroidId", new GetAndroidId());
+		functions.put("registerGCM", new RegisterGCM());
 
 		// Debug
 		functions.put("nativeLog", new NativeLogFunction());

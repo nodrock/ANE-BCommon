@@ -7,7 +7,7 @@ import flash.system.Capabilities;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.3";
+    public static const VERSION:String = "1.0.5";
 
     private var _initialized:Boolean;
 
@@ -90,7 +90,7 @@ public class BCommon extends EventDispatcher {
                 return _context.call("getIDFV") as String;
             }else{
 
-                log("This method is supported only on iOS!");
+                log("[getIDFV] This method is supported only on iOS!");
                 return null;
             }
         } else {
@@ -109,7 +109,7 @@ public class BCommon extends EventDispatcher {
                 return _context.call("getAndroidId") as String;
             }else{
 
-                log("This method is supported only on Android!");
+                log("[getAndroidId] This method is supported only on Android!");
                 return null;
             }
         } else {
@@ -130,7 +130,7 @@ public class BCommon extends EventDispatcher {
                 return BCommonIDFA.createFrom(id, trackingEnabled);
             }else{
 
-                log("This method is supported only on iOS!");
+                log("[getIDFA] This method is supported only on iOS!");
                 return null;
             }
         } else {
@@ -149,7 +149,7 @@ public class BCommon extends EventDispatcher {
                 _context.call("getAAID");
             }else{
 
-                log("This method is supported only on Android!");
+                log("[getAAID] This method is supported only on Android!");
             }
         } else {
 
@@ -166,7 +166,24 @@ public class BCommon extends EventDispatcher {
                 _context.call("flagKeepScreenOn", value);
             }else{
 
-                log("This method is supported only on Android!");
+                log("[setFlagKeepScreenOn] This method is supported only on Android!");
+            }
+        } else {
+
+            log("You must call init() before any other method!");
+        }
+    }
+
+    public function registerGCM(senderId:String):void
+    {
+        if(_initialized) {
+
+            if (isAndroid()) {
+
+                _context.call("registerGCM", senderId);
+            }else{
+
+                log("[registerGCM] This method is supported only on Android!");
             }
         } else {
 
@@ -266,6 +283,28 @@ public class BCommon extends EventDispatcher {
                     aaidEvent = new BCommonAAIDEvent(BCommonAAIDEvent.AAID_FAILED, false, false);
                     aaidEvent.error = BCommonErrorObject.createFromJSON(event.level);
                     dispatchEvent(aaidEvent);
+                }
+            }
+        }
+        else if(event.code.indexOf("GCM") != -1)
+        {
+            dataArr = event.code.split("_");
+            var gcmEvent:BCommonGCMEvent;
+            if(dataArr[1] == "TOKEN"){
+
+                if(hasEventListener(BCommonGCMEvent.TOKEN)){
+
+                    gcmEvent = new BCommonGCMEvent(BCommonGCMEvent.TOKEN, false, false);
+                    gcmEvent.token = event.level;
+                    dispatchEvent(gcmEvent);
+                }
+            }else if(dataArr[1] == "ERROR"){
+
+                if(hasEventListener(BCommonGCMEvent.ERROR)){
+
+                    gcmEvent = new BCommonGCMEvent(BCommonGCMEvent.ERROR, false, false);
+                    gcmEvent.error = BCommonErrorObject.createFromJSON(event.level);
+                    dispatchEvent(gcmEvent);
                 }
             }
         }

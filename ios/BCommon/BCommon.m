@@ -58,7 +58,7 @@ static BCommon *sharedInstance = nil;
     }
     @catch (NSException *exception)
     {
-        NSLog(@"[AirFacebook] Couldn't log message. Exception: %@", exception);
+        NSLog(@"[BCommon] Couldn't log message. Exception: %@", exception);
     }
 }
 
@@ -70,7 +70,7 @@ static BCommon *sharedInstance = nil;
 + (void)nativeLog:(NSString *)message withPrefix:(NSString *)prefix
 {
     if ([[BCommon sharedInstance] isNativeLogEnabled]) {
-        NSLog(@"[AirFacebook][%@] %@", prefix, message);
+        NSLog(@"[BCommon][%@] %@", prefix, message);
     }
 }
 

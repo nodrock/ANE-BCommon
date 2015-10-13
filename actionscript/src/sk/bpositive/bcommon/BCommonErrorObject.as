@@ -17,6 +17,14 @@ public class BCommonErrorObject {
         return errorObject;
     }
 
+    public static function create(error:String, message:String):BCommonErrorObject
+    {
+        var errorObject:BCommonErrorObject = new BCommonErrorObject();
+        errorObject._error = error;
+        errorObject._message = message;
+        return errorObject;
+    }
+
     public function toString():String
     {
         return "BCommonErrorObject{error=" + _error + ",message=" + _message + "}";

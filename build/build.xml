@@ -66,6 +66,7 @@
         <copy file="../android/libs/play-services-analytics-7.8.0.jar" todir="temp/android/"/>
         <copy file="../android/libs/play-services-base-7.8.0.jar" todir="temp/android/"/>
         <copy file="../android/libs/play-services-appindexing-7.8.0.jar" todir="temp/android/"/>
+        <copy file="../android/libs/play-services-gcm-7.8.0.jar" todir="temp/android/"/>
 
         <unzip src="../android/build/outputs/aar/android-release.aar" dest="../android/build/aar" overwrite="true"/>
 

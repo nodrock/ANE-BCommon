@@ -5,7 +5,7 @@ import flash.system.Capabilities;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.2";
+    public static const VERSION:String = "1.0.5";
 
     // --------------------------------------------------------------------------------------//
     //																						 //
@@ -64,11 +64,19 @@ public class BCommon extends EventDispatcher {
     public function getAAID():void
     {
         var event:BCommonAAIDEvent = new BCommonAAIDEvent(BCommonAAIDEvent.AAID_FAILED, false, false);
+        event.error = BCommonErrorObject.createFromJSON("method_not_implemented");
         dispatchEvent(event);
     }
 
     public function setFlagKeepScreenOn(value:Boolean):void
     {
+    }
+
+    public function registerGCM(senderId:String):void
+    {
+        var event:BCommonGCMEvent = new BCommonGCMEvent(BCommonGCMEvent.ERROR, false, false);
+        event.error = BCommonErrorObject.createFromJSON("method_not_implemented");
+        dispatchEvent(event);
     }
 
     // --------------------------------------------------------------------------------------//
