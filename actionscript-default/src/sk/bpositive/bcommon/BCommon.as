@@ -46,6 +46,11 @@ public class BCommon extends EventDispatcher {
     {
     }
 
+    public function getLanguageCode():String
+    {
+        return null;
+    }
+
     public function getIDFV():String
     {
         return null;

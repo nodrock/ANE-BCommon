@@ -7,7 +7,7 @@ import flash.system.Capabilities;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.5";
+    public static const VERSION:String = "1.0.6";
 
     private var _initialized:Boolean;
 
@@ -78,6 +78,15 @@ public class BCommon extends EventDispatcher {
         } else {
 
             log("Can't initialize extension! Unsupported platform or context couldn't be created!")
+        }
+    }
+
+    public function getLanguageCode():String
+    {
+        if (_initialized) {
+            return _context.call("getLanguageCode") as String;
+        } else {
+            return null;
         }
     }
 

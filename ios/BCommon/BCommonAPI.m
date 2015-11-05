@@ -27,6 +27,7 @@ void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
     NSDictionary *functions = @{
+                                @"getLanguageCode":                 [NSValue valueWithPointer:&getLanguageCode],
                                 @"getIDFV":                         [NSValue valueWithPointer:&getIDFV],
                                 @"getIDFA":                         [NSValue valueWithPointer:&getIDFA],
                                 @"getIDFATrackingEnabled":          [NSValue valueWithPointer:&getIDFATrackingEnabled],

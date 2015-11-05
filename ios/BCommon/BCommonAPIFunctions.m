@@ -41,6 +41,16 @@ DEFINE_ANE_FUNCTION(getIDFV)
     return [FREConversionUtil fromString:idString];
 }
 
+DEFINE_ANE_FUNCTION(getLanguageCode)
+{
+    NSLocale* locale = [[NSLocale alloc] initWithLocaleIdentifier:[[NSLocale preferredLanguages] firstObject]];
+    NSString* languageCode = [locale objectForKey:NSLocaleLanguageCode];
+        
+    [BCommon log:@"getLanguageCode: %@", languageCode];
+
+    return [FREConversionUtil fromString:languageCode];
+}
+
 DEFINE_ANE_FUNCTION(getIDFA)
 {
     NSString* idString = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
