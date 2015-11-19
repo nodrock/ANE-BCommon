@@ -5,7 +5,7 @@ import flash.system.Capabilities;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.5";
+    public static const VERSION:String = "1.0.7";
 
     // --------------------------------------------------------------------------------------//
     //																						 //

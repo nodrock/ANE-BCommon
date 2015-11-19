@@ -27,14 +27,14 @@ void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
     NSDictionary *functions = @{
-                                @"getLanguageCode":                 [NSValue valueWithPointer:&getLanguageCode],
-                                @"getIDFV":                         [NSValue valueWithPointer:&getIDFV],
-                                @"getIDFA":                         [NSValue valueWithPointer:&getIDFA],
-                                @"getIDFATrackingEnabled":          [NSValue valueWithPointer:&getIDFATrackingEnabled],
+                                @"getLanguageCode":                 [NSValue valueWithPointer:&BCOMMON(getLanguageCode)],
+                                @"getIDFV":                         [NSValue valueWithPointer:&BCOMMON(getIDFV)],
+                                @"getIDFA":                         [NSValue valueWithPointer:&BCOMMON(getIDFA)],
+                                @"getIDFATrackingEnabled":          [NSValue valueWithPointer:&BCOMMON(getIDFATrackingEnabled)],
                                 
                                 // Debug
-                                @"nativeLog":                       [NSValue valueWithPointer:&nativeLog],
-                                @"setNativeLogEnabled":             [NSValue valueWithPointer:&setNativeLogEnabled],
+                                @"nativeLog":                       [NSValue valueWithPointer:&BCOMMON(nativeLog)],
+                                @"setNativeLogEnabled":             [NSValue valueWithPointer:&BCOMMON(setNativeLogEnabled)],
                                 };
     
     *numFunctionsToTest = (uint32_t)[functions count];

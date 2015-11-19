@@ -111,6 +111,7 @@
 
         <exec executable="${flex.sdk}/bin/compc${bin.ext}" failonerror="true">
             <env key="AIR_SDK_HOME" value="${flex.sdk}"/>
+            <arg line="-load-config ${flex.sdk}/frameworks/airmobile-config.xml" />
             <arg line='-source-path ../actionscript/src'/>
             <arg line='-output temp/swc/${name}.swc'/>
             <arg line='-swf-version=29'/>
@@ -141,6 +142,7 @@
 
         <exec executable="${flex.sdk}/bin/compc${bin.ext}" failonerror="true">
             <env key="AIR_SDK_HOME" value="${flex.sdk}"/>
+            <arg line="-load-config ${flex.sdk}/frameworks/airmobile-config.xml" />
             <arg line='-source-path ../actionscript-default/src'/>
             <arg line='-output temp/swc/${name}.swc'/>
             <arg line='-swf-version=29'/>
