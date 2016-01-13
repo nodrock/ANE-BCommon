@@ -31,6 +31,9 @@ void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                 @"getIDFV":                         [NSValue valueWithPointer:&BCOMMON(getIDFV)],
                                 @"getIDFA":                         [NSValue valueWithPointer:&BCOMMON(getIDFA)],
                                 @"getIDFATrackingEnabled":          [NSValue valueWithPointer:&BCOMMON(getIDFATrackingEnabled)],
+                                @"canOpenSettings":                 [NSValue valueWithPointer:&BCOMMON(canOpenSettings)],
+                                @"openSettings":                    [NSValue valueWithPointer:&BCOMMON(openSettings)],
+                                @"isRemoteNotificationsEnabled":    [NSValue valueWithPointer:&BCOMMON(isRemoteNotificationsEnabled)],
                                 
                                 // Debug
                                 @"nativeLog":                       [NSValue valueWithPointer:&BCOMMON(nativeLog)],

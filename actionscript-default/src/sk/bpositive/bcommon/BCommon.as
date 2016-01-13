@@ -5,7 +5,7 @@ import flash.system.Capabilities;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.7";
+    public static const VERSION:String = "1.0.8";
 
     // --------------------------------------------------------------------------------------//
     //																						 //
@@ -82,6 +82,20 @@ public class BCommon extends EventDispatcher {
         var event:BCommonGCMEvent = new BCommonGCMEvent(BCommonGCMEvent.ERROR, false, false);
         event.error = BCommonErrorObject.createFromJSON("method_not_implemented");
         dispatchEvent(event);
+    }
+
+    public function canOpenSettings():Boolean
+    {
+        return false;
+    }
+
+    public function openSettings():void
+    {
+    }
+
+    public function isRemoteNotificationsEnabled():Boolean
+    {
+        return false;
     }
 
     // --------------------------------------------------------------------------------------//

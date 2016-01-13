@@ -7,7 +7,7 @@ import flash.system.Capabilities;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.7";
+    public static const VERSION:String = "1.0.8";
 
     private var _initialized:Boolean;
 
@@ -197,6 +197,63 @@ public class BCommon extends EventDispatcher {
         } else {
 
             log("You must call init() before any other method!");
+        }
+    }
+
+    public function canOpenSettings():Boolean
+    {
+        if (_initialized) {
+
+            if(isIOS()){
+
+                var canOpenSettings:Boolean = _context.call("canOpenSettings") as Boolean;
+                return canOpenSettings;
+            }else{
+
+                log("[canOpenSettings] This method is supported only on iOS!");
+                return false;
+            }
+        } else {
+
+            log("You must call init() before any other method!");
+            return false;
+        }
+    }
+
+    public function openSettings():void
+    {
+        if (_initialized) {
+
+            if(isIOS()){
+
+                _context.call("openSettings");
+            }else{
+
+                log("[openSettings] This method is supported only on iOS!");
+            }
+        } else {
+
+            log("You must call init() before any other method!");
+        }
+    }
+
+    public function isRemoteNotificationsEnabled():Boolean
+    {
+        if (_initialized) {
+
+            if(isIOS()){
+
+                var remoteNotificationsEnabled:Boolean = _context.call("isRemoteNotificationsEnabled") as Boolean;
+                return remoteNotificationsEnabled;
+            }else{
+
+                log("[isRemoteNotificationsEnabled] This method is supported only on iOS!");
+                return false;
+            }
+        } else {
+
+            log("You must call init() before any other method!");
+            return false;
         }
     }
 
