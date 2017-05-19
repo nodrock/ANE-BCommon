@@ -7,7 +7,7 @@ import flash.system.Capabilities;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.8";
+    public static const VERSION:String = "1.0.9";
 
     private var _initialized:Boolean;
 
@@ -255,6 +255,50 @@ public class BCommon extends EventDispatcher {
             log("You must call init() before any other method!");
             return false;
         }
+    }
+
+    public function getInstallerPackageName():String
+    {
+        if (_initialized) {
+
+            if(isIOS()){
+
+                log("[getInstallerPackageName] This method is supported only on Android!");
+                return null;
+            } else {
+
+                return _context.call("getInstallerPackageName") as String;
+
+            }
+        } else {
+
+            log("You must call init() before any other method!");
+            return null;
+        }
+    }
+
+    public function immersiveMode(isSticky:Boolean = true):Boolean
+    {
+        if (_initialized) {
+
+            if(isIOS()){
+
+                log("[immersiveMode] This method is supported only on Android!");
+                return false;
+            } else {
+
+                return _context.call("immersiveMode", isSticky) as Boolean;
+            }
+        } else {
+
+            log("You must call init() before any other method!");
+            return null;
+        }
+    }
+
+    public function call(functionName:String, ... args):Object
+    {
+        return _context.call.apply(_context, [functionName].concat(args));
     }
 
     // --------------------------------------------------------------------------------------//

@@ -40,9 +40,9 @@ public class RegistrationIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         //SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String senderId = intent.getStringExtra(TAG + ".senderId");
-
         try {
+            String senderId = intent.getStringExtra(TAG + ".senderId");
+
             // [START register_for_gcm]
             // Initially this call goes out to the network to retrieve the token, subsequent calls
             // are local.
@@ -65,7 +65,10 @@ public class RegistrationIntentService extends IntentService {
             // [END register_for_gcm]
         } catch (Exception e) {
             Log.d(TAG, "Failed to complete token refresh", e);
-            BCommonExtension.context.dispatchStatusEventAsync("GCM_ERROR", "{\"error\":\"get_token\", \"message\":\"" + e.getMessage() + "\"}");
+
+            if(BCommonExtension.context != null) {
+                BCommonExtension.context.dispatchStatusEventAsync("GCM_ERROR", "{\"error\":\"get_token\", \"message\":\"" + e.getMessage() + "\"}");
+            }
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
             //sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false).apply();

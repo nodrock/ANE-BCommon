@@ -22,9 +22,15 @@ public class BCommonExtensionContext extends FREContext
 
 		functions.put("getLanguageCode", new GetLanguageCodeFunction());
 		functions.put("flagKeepScreenOn", new FlagKeepScreenOn());
+		functions.put("getFlagKeepScreenOn", new GetFlagKeepScreenOn());
 		functions.put("getAAID", new GetAAIDFunction());
 		functions.put("getAndroidId", new GetAndroidId());
 		functions.put("registerGCM", new RegisterGCM());
+		functions.put("crc32", new CRC32Function());
+		functions.put("sha1", new SHA1Function());
+		functions.put("unzipFile", new UnzipFileFunction());
+		functions.put("getInstallerPackageName", new GetInstallerPackageName());
+		functions.put("immersiveMode", new ImmersiveModeFunction());
 
 		// Debug
 		functions.put("nativeLog", new NativeLogFunction());

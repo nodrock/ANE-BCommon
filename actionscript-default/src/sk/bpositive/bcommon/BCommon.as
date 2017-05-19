@@ -5,7 +5,7 @@ import flash.system.Capabilities;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.8";
+    public static const VERSION:String = "1.0.9";
 
     // --------------------------------------------------------------------------------------//
     //																						 //
@@ -96,6 +96,21 @@ public class BCommon extends EventDispatcher {
     public function isRemoteNotificationsEnabled():Boolean
     {
         return false;
+    }
+
+    public function getInstallerPackageName():String
+    {
+        return null;
+    }
+
+    public function immersiveMode(isSticky:Boolean = true):Boolean
+    {
+        return false;
+    }
+
+    public function call(functionName:String, ... args):Object
+    {
+        return null;
     }
 
     // --------------------------------------------------------------------------------------//

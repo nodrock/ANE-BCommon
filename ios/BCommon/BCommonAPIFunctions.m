@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <AdSupport/AdSupport.h>
+//#import <ZipArchive/ZipArchive.h>
 #import "BCommonAPIFunctions.h"
 #import "FREConversionUtil2.h"
 #import "BCommon.h"
+
+#import <zlib.h>
+#import <CommonCrypto/CommonDigest.h>
 
 DEFINE_ANE_FUNCTION(nativeLog)
 {
@@ -30,6 +34,57 @@ DEFINE_ANE_FUNCTION(setNativeLogEnabled)
     [[BCommon sharedInstance] setNativeLogEnabled:nativeLogEnabled];
     
     return nil;
+}
+
+DEFINE_ANE_FUNCTION(crc32)
+{
+    FREByteArray byteArray;
+    FREAcquireByteArray(argv[0], &byteArray);
+    
+    uint32_t crc = (uint32_t) crc32(0L, byteArray.bytes, byteArray.length);
+    
+    FREReleaseByteArray(argv[0]);
+    
+    return [FREConversionUtil2 fromUInt:crc];
+}
+
+DEFINE_ANE_FUNCTION(adler32)
+{
+    FREByteArray byteArray;
+    FREAcquireByteArray(argv[0], &byteArray);
+    
+    uint32_t adler = (uint32_t) adler32(0L, byteArray.bytes, byteArray.length);
+    
+    FREReleaseByteArray(argv[0]);
+    
+    return [FREConversionUtil2 fromUInt:adler];
+}
+
+DEFINE_ANE_FUNCTION(sha1)
+{
+    FREByteArray byteArray;
+    FREAcquireByteArray(argv[0], &byteArray);
+    
+    unsigned char digest_sha1[CC_SHA1_DIGEST_LENGTH];
+    CC_SHA1(byteArray.bytes, byteArray.length, digest_sha1);
+    
+    FREReleaseByteArray(argv[0]);
+    
+    return [FREConversionUtil2 fromString:[FREConversionUtil2 toHexString:digest_sha1 length:CC_SHA1_DIGEST_LENGTH]];
+}
+
+
+DEFINE_ANE_FUNCTION(md5)
+{
+    FREByteArray byteArray;
+    FREAcquireByteArray(argv[0], &byteArray);
+    
+    unsigned char digest_md5[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(byteArray.bytes, byteArray.length, digest_md5);
+    
+    FREReleaseByteArray(argv[0]);
+
+    return [FREConversionUtil2 fromString:[FREConversionUtil2 toHexString:digest_md5 length:CC_MD5_DIGEST_LENGTH]];
 }
 
 DEFINE_ANE_FUNCTION(getIDFV)
@@ -71,6 +126,7 @@ DEFINE_ANE_FUNCTION(getIDFATrackingEnabled)
 
 DEFINE_ANE_FUNCTION(canOpenSettings)
 {
+    // IOS >= 8 this should be true
     BOOL fCanOpenSettings = (&UIApplicationOpenSettingsURLString != NULL);
     
     [BCommon log:@"canOpenSettings: %@", (fCanOpenSettings ? @"YES" : @"NO")];
@@ -80,6 +136,7 @@ DEFINE_ANE_FUNCTION(canOpenSettings)
 
 DEFINE_ANE_FUNCTION(openSettings)
 {
+    // IOS >= 8 this should be true
     BOOL fCanOpenSettings = (&UIApplicationOpenSettingsURLString != NULL);
     
     [BCommon log:@"openSettings: %@", (fCanOpenSettings ? @"YES" : @"NO")];
@@ -112,4 +169,38 @@ DEFINE_ANE_FUNCTION(isRemoteNotificationsEnabled)
     }
     
     return [FREConversionUtil2 fromBoolean:remoteNotificationsEnabled];
+}
+
+DEFINE_ANE_FUNCTION(unzipFile)
+{
+    NSString *file = [FREConversionUtil2 toString:argv[0]];
+    NSString *destination = [FREConversionUtil2 toString:argv[1]];
+    
+//    BOOL success = [SSZipArchive unzipFileAtPath:file toDestination:destination];
+    
+//    return [FREConversionUtil2 fromBoolean:success];
+    return nil;
+}
+
+UIImageView *splashView;
+
+DEFINE_ANE_FUNCTION(showSplashView)
+{
+    UIApplication *application = [UIApplication sharedApplication];
+    UIView *keyWindow = [application keyWindow];
+    
+    splashView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Default.png"]];
+    
+    [BCommon log:@"showSplashView: %@", splashView];
+    
+    [keyWindow addSubview:splashView];
+    
+    return nil;
+}
+
+DEFINE_ANE_FUNCTION(hideSplashView)
+{
+    [splashView removeFromSuperview];
+    
+    return nil;
 }

@@ -35,6 +35,16 @@ void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                 @"openSettings":                    [NSValue valueWithPointer:&BCOMMON(openSettings)],
                                 @"isRemoteNotificationsEnabled":    [NSValue valueWithPointer:&BCOMMON(isRemoteNotificationsEnabled)],
                                 
+                                @"showSplashView":                  [NSValue valueWithPointer:&BCOMMON(showSplashView)],
+                                @"hideSplashView":                  [NSValue valueWithPointer:&BCOMMON(hideSplashView)],
+                                
+                                @"crc32":                           [NSValue valueWithPointer:&BCOMMON(crc32)],
+                                @"adler32":                         [NSValue valueWithPointer:&BCOMMON(adler32)],
+                                @"sha1":                            [NSValue valueWithPointer:&BCOMMON(sha1)],
+                                @"md5":                             [NSValue valueWithPointer:&BCOMMON(md5)],
+                                
+                                @"unzipFile":                       [NSValue valueWithPointer:&BCOMMON(unzipFile)],
+                                
                                 // Debug
                                 @"nativeLog":                       [NSValue valueWithPointer:&BCOMMON(nativeLog)],
                                 @"setNativeLogEnabled":             [NSValue valueWithPointer:&BCOMMON(setNativeLogEnabled)],
