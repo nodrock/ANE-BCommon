@@ -7,6 +7,9 @@
 //
 
 #import "FlashRuntimeExtensions.h"
+#import "NotificationController.h"
+
+NotificationController *g_notificationController;
 
 void BCommonInitializer(void** extDataToSet, FREContextInitializer* ctxInitializerToSet, FREContextFinalizer* ctxFinalizerToSet);
 void BCommonFinalizer(void *extData);

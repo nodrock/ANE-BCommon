@@ -1,11 +1,30 @@
-<platform xmlns="http://ns.adobe.com/air/extension/18.0">
+<platform xmlns="http://ns.adobe.com/air/extension/19.0">
     <sdkVersion>7.0</sdkVersion>
     <linkerOptions>
         <option>-framework AdSupport</option>
-        <option>-weak_framework Accounts</option> 
-        <option>-weak_framework AdSupport</option>
+        <!--<option>-framework SafariServices</option>-->
+        <!--<option>-framework AddressBook</option>-->
+        <!--<option>-framework MessageUI</option>-->
+        <option>-weak_framework UserNotifications</option>
+        <option>-weak_framework Accounts</option>
         <option>-weak_framework Social</option>
         <option>-weak_framework CoreMotion</option>
         <option>-weak_framework StoreKit</option>
     </linkerOptions>
+    <packagedDependencies>
+        <packagedDependency>FirebaseAnalytics.framework</packagedDependency>
+        <packagedDependency>FirebaseCore.framework</packagedDependency>
+        <packagedDependency>FirebaseCoreDiagnostics.framework</packagedDependency>
+        <packagedDependency>FirebaseDynamicLinks.framework</packagedDependency>
+        <packagedDependency>FirebaseInstanceID.framework</packagedDependency>
+        <!--<packagedDependency>FirebaseInvites.framework</packagedDependency>-->
+        <packagedDependency>FirebaseMessaging.framework</packagedDependency>
+        <packagedDependency>FirebaseNanoPB.framework</packagedDependency>
+        <!--<packagedDependency>GoogleAPIClientForREST.framework</packagedDependency>-->
+        <!--<packagedDependency>GoogleSignIn.framework</packagedDependency>-->
+        <packagedDependency>GoogleToolboxForMac.framework</packagedDependency>
+        <!--<packagedDependency>GTMOAuth2.framework</packagedDependency>-->
+        <!--<packagedDependency>GTMSessionFetcher.framework</packagedDependency>-->
+        <packagedDependency>Protobuf.framework</packagedDependency>
+    </packagedDependencies>
 </platform>

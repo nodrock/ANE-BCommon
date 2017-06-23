@@ -13,8 +13,17 @@
 #import "FREConversionUtil2.h"
 #import "BCommon.h"
 
+#import "BCommonAPI.h"
+#import "NotificationController.h"
+
 #import <zlib.h>
 #import <CommonCrypto/CommonDigest.h>
+#import "Firebase.h"
+
+DEFINE_ANE_FUNCTION(isSupported)
+{
+    return [FREConversionUtil2 fromBoolean:YES];
+}
 
 DEFINE_ANE_FUNCTION(nativeLog)
 {
@@ -173,8 +182,8 @@ DEFINE_ANE_FUNCTION(isRemoteNotificationsEnabled)
 
 DEFINE_ANE_FUNCTION(unzipFile)
 {
-    NSString *file = [FREConversionUtil2 toString:argv[0]];
-    NSString *destination = [FREConversionUtil2 toString:argv[1]];
+//    NSString *file = [FREConversionUtil2 toString:argv[0]];
+//    NSString *destination = [FREConversionUtil2 toString:argv[1]];
     
 //    BOOL success = [SSZipArchive unzipFileAtPath:file toDestination:destination];
     
@@ -203,4 +212,30 @@ DEFINE_ANE_FUNCTION(hideSplashView)
     [splashView removeFromSuperview];
     
     return nil;
+}
+
+DEFINE_ANE_FUNCTION(initFirebase)
+{
+    if ([FIRApp defaultApp] == nil) {
+        [FIRApp configure];
+    }
+    
+    return nil;
+}
+
+DEFINE_ANE_FUNCTION(registerForRemoteNotifications)
+{
+    [BCommon log:@"ANE registerForRemoteNotifications"];
+    [g_notificationController registerForRemoteNotifications];
+    
+    return nil;
+}
+
+DEFINE_ANE_FUNCTION(getFCMToken)
+{
+    [BCommon log:@"ANE getFCMToken"];
+    NSString *fcmToken = g_notificationController.FCMToken;
+    [BCommon log:@"FCM_TOKEN: %@", fcmToken];
+    
+    return [FREConversionUtil2 fromString:fcmToken];
 }

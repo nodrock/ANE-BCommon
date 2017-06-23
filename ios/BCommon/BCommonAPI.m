@@ -16,17 +16,23 @@ void BCommonInitializer(void** extDataToSet, FREContextInitializer* ctxInitializ
     *extDataToSet = NULL;
     *ctxInitializerToSet = &BCommonContextInitializer;
     *ctxFinalizerToSet = &BCommonContextFinalizer;
+    
+    if(g_notificationController == nil) {
+        g_notificationController = [[NotificationController alloc] init];
+    }
 }
 
 void BCommonFinalizer(void *extData)
 {
-    return;
+    g_notificationController = nil;
 }
 
 void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx,
                                uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
     NSDictionary *functions = @{
+                                @"isSupported":                     [NSValue valueWithPointer:&BCOMMON(isSupported)],
+                                
                                 @"getLanguageCode":                 [NSValue valueWithPointer:&BCOMMON(getLanguageCode)],
                                 @"getIDFV":                         [NSValue valueWithPointer:&BCOMMON(getIDFV)],
                                 @"getIDFA":                         [NSValue valueWithPointer:&BCOMMON(getIDFA)],
@@ -43,7 +49,11 @@ void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                 @"sha1":                            [NSValue valueWithPointer:&BCOMMON(sha1)],
                                 @"md5":                             [NSValue valueWithPointer:&BCOMMON(md5)],
                                 
-                                @"unzipFile":                       [NSValue valueWithPointer:&BCOMMON(unzipFile)],
+                                @"initFirebase":                    [NSValue valueWithPointer:&BCOMMON(initFirebase)],
+                                @"registerForRemoteNotifications":  [NSValue valueWithPointer:&BCOMMON(registerForRemoteNotifications)],
+                                @"getFCMToken":                     [NSValue valueWithPointer:&BCOMMON(getFCMToken)],
+                                
+                                //@"unzipFile":                       [NSValue valueWithPointer:&BCOMMON(unzipFile)],
                                 
                                 // Debug
                                 @"nativeLog":                       [NSValue valueWithPointer:&BCOMMON(nativeLog)],

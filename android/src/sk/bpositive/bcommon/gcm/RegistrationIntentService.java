@@ -29,7 +29,7 @@ import java.io.IOException;
 
 public class RegistrationIntentService extends IntentService {
 
-    public static final String TAG = "RegistrationIntentService";
+    public static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
 
     public RegistrationIntentService() {

@@ -13,6 +13,7 @@
 #define DEFINE_ANE_FUNCTION(fn) FREObject BCOMMON(fn)(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 
 // C interface
+DEFINE_ANE_FUNCTION(isSupported);
 
 // Debug
 DEFINE_ANE_FUNCTION(nativeLog);
@@ -35,3 +36,7 @@ DEFINE_ANE_FUNCTION(sha1);
 DEFINE_ANE_FUNCTION(md5);
 
 DEFINE_ANE_FUNCTION(unzipFile);
+
+DEFINE_ANE_FUNCTION(initFirebase);
+DEFINE_ANE_FUNCTION(registerForRemoteNotifications);
+DEFINE_ANE_FUNCTION(getFCMToken);

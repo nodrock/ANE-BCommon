@@ -32,7 +32,7 @@ import sk.bpositive.bcommon.BCommonExtension;
 
 public class BCommonGcmListenerService extends GcmListenerService {
 
-    private static final String TAG = "BCommonGcmListenerService";
+    private static final String TAG = "BCommonGcmListenerServ";
 
     /**
      * Called when message is received.
@@ -45,12 +45,6 @@ public class BCommonGcmListenerService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         Log.i(TAG, "From: " + from);
-        Bundle bundle = data;
-        for (String key : bundle.keySet()) {
-            Object value = bundle.get(key);
-            Log.i(TAG, String.format("%s %s (%s)", key,
-                    value == null ? "null" : value.toString(), value == null ? "null" : value.getClass().getName()));
-        }
 
 //        if (from.startsWith("/topics/")) {
 //            // message received from some topic.

@@ -1,27 +1,27 @@
 ﻿package sk.bpositive.bcommon {
 
 import flash.events.EventDispatcher;
+import flash.events.IEventDispatcher;
 import flash.events.StatusEvent;
-import flash.external.ExtensionContext;
 import flash.system.Capabilities;
+
+import sk.bpositive.bcommon.common.ExtensionWrapper;
 
 public class BCommon extends EventDispatcher {
 
-    public static const VERSION:String = "1.0.9";
+    private static const INVOKE_REASON_NOTIFICATION:String = "notification";
+    public static const NOTIFICATION_ACTION_START:String = "start";
+    private static const IOS_NOTIFICATION_MESSAGE_ID:String = "gcm.message_id";
+    private static const IOS_NOTIFICATION_REF:String = "ref";
+    
+    public static const VERSION:String = "1.1.0";
+    public static const EXTENSION_ID:String = "sk.bpositive.BCommon";
+    private var m_extensionContext:ExtensionWrapper;
 
-    private var _initialized:Boolean;
+    private var m_logEnabled:Boolean = false;
+    private var m_nativeLogEnabled:Boolean = false;
 
-    // --------------------------------------------------------------------------------------//
-    //																						 //
-    // 									   PUBLIC API										 //
-    // 																						 //
-    // --------------------------------------------------------------------------------------//
-
-    /** BCommon is supported on iOS and Android devices. */
-    public static function get isSupported():Boolean
-    {
-        return isIOS() || isAndroid();
-    }
+    private var m_iosNotificationData:NotificationData;
 
     public static function isIOS():Boolean
     {
@@ -33,272 +33,238 @@ public class BCommon extends EventDispatcher {
         return Capabilities.version.indexOf("AND") != -1;
     }
 
-    public function BCommon()
-    {
-        if(!isSupported){
-            throw new Error("This extension is supported only on iOS and Android!");
-        }
-        if (!_instance) {
-            _context = ExtensionContext.createExtensionContext(EXTENSION_ID, null);
-            if (!_context) {
-                log("ERROR - Extension context is null. Please check if extension.xml is setup correctly.");
-                return;
-            }
-
-            _instance = this;
-        }
-        else {
-            throw Error("This is a singleton, use getInstance(), do not call the constructor directly.");
-        }
-    }
+    private static var _instance:BCommon;
 
     public static function getInstance():BCommon
     {
-        if(!isSupported){
-            trace("This extension is supported only on iOS and Android!");
-            return null;
+        if (_instance == null) {
+            _instance = new BCommon();
         }
-        return _instance ? _instance : new BCommon();
+        return _instance;
     }
 
-    public function init():void
+    public function BCommon(target:IEventDispatcher = null)
     {
-        if (isSupported && _context != null) {
+        super(target);
 
-            if(!_initialized){
-                _context.addEventListener(StatusEvent.STATUS, onStatus);
+        m_extensionContext = new ExtensionWrapper(EXTENSION_ID);
+        m_extensionContext.addEventListener(StatusEvent.STATUS, onStatus);
+    }
 
-                _context.call("setNativeLogEnabled", BCommon.nativeLogEnabled);
-                log("ANE BCommon version: " + VERSION);
+    /**
+     * Determines if the BCommon is supported on a platform
+     */
+    public function get isSupported():Boolean
+    {
+        return m_extensionContext.isSupported;
+    }
 
-                _initialized = true;
-            } else {
-                log("Already initialized!");
-            }
-        } else {
-
-            log("Can't initialize extension! Unsupported platform or context couldn't be created!")
-        }
+    public function setLogEnabled(as3Log:Boolean, nativeLog:Boolean):void
+    {
+        m_logEnabled = as3Log;
+        m_nativeLogEnabled = nativeLog;
+        m_extensionContext.call(NativeMethods.SET_NATIVE_LOG_ENABLED, nativeLog);
     }
 
     public function getLanguageCode():String
     {
-        if (_initialized) {
-            return _context.call("getLanguageCode") as String;
-        } else {
-            return null;
-        }
+        return m_extensionContext.call(NativeMethods.GET_LANGUAGE_CODE) as String;
     }
 
     public function getIDFV():String
     {
-        if (_initialized) {
+        if (isIOS()) {
 
-            if(isIOS()){
-
-                return _context.call("getIDFV") as String;
-            }else{
-
-                log("[getIDFV] This method is supported only on iOS!");
-                return null;
-            }
+            return m_extensionContext.call(NativeMethods.GET_IDFV) as String;
         } else {
-
-            log("You must call init() before any other method!");
             return null;
         }
     }
 
     public function getAndroidId():String
     {
-        if (_initialized) {
+        if (isAndroid()) {
 
-            if(isAndroid()){
-
-                return _context.call("getAndroidId") as String;
-            }else{
-
-                log("[getAndroidId] This method is supported only on Android!");
-                return null;
-            }
+            return m_extensionContext.call(NativeMethods.GET_ANDROID_ID) as String;
         } else {
-
-            log("You must call init() before any other method!");
             return null;
         }
     }
 
     public function getIDFA():BCommonIDFA
     {
-        if (_initialized) {
+        if (isIOS()) {
 
-            if(isIOS()){
-
-                var id:String = _context.call("getIDFA") as String;
-                var trackingEnabled:Boolean = _context.call("getIDFATrackingEnabled") as Boolean;
-                return BCommonIDFA.createFrom(id, trackingEnabled);
-            }else{
-
-                log("[getIDFA] This method is supported only on iOS!");
-                return null;
-            }
+            var id:String = m_extensionContext.call(NativeMethods.GET_IDFA) as String;
+            var trackingEnabled:Boolean = m_extensionContext.call(NativeMethods.GET_IDFA_TRACKING_ENABLED) as Boolean;
+            return BCommonIDFA.createFrom(id, trackingEnabled);
         } else {
-
-            log("You must call init() before any other method!");
             return null;
         }
     }
 
     public function getAAID():void
     {
-        if (_initialized) {
+        if (isAndroid()) {
 
-            if(isAndroid()){
-
-                _context.call("getAAID");
-            }else{
-
-                log("[getAAID] This method is supported only on Android!");
-            }
-        } else {
-
-            log("You must call init() before any other method!");
+            m_extensionContext.call(NativeMethods.GET_AAID);
         }
     }
 
     public function setFlagKeepScreenOn(value:Boolean):void
     {
-        if(_initialized) {
+        if (isAndroid()) {
 
-            if (isAndroid()) {
-
-                _context.call("flagKeepScreenOn", value);
-            }else{
-
-                log("[setFlagKeepScreenOn] This method is supported only on Android!");
-            }
-        } else {
-
-            log("You must call init() before any other method!");
+            m_extensionContext.call(NativeMethods.FLAG_KEEP_SCREEN_ON, value);
         }
     }
 
+    /**
+     * @deprecated Use only with old GCM.
+     * @param senderId
+     */
     public function registerGCM(senderId:String):void
     {
-        if(_initialized) {
+        if (isAndroid()) {
 
-            if (isAndroid()) {
-
-                _context.call("registerGCM", senderId);
-            }else{
-
-                log("[registerGCM] This method is supported only on Android!");
-            }
-        } else {
-
-            log("You must call init() before any other method!");
+            m_extensionContext.call(NativeMethods.REGISTER_GCM, senderId);
         }
     }
 
     public function canOpenSettings():Boolean
     {
-        if (_initialized) {
+        if (isIOS()) {
 
-            if(isIOS()){
-
-                var canOpenSettings:Boolean = _context.call("canOpenSettings") as Boolean;
-                return canOpenSettings;
-            }else{
-
-                log("[canOpenSettings] This method is supported only on iOS!");
-                return false;
-            }
+            var canOpenSettings:Boolean = m_extensionContext.call(NativeMethods.CAN_OPEN_SETTINGS) as Boolean;
+            return canOpenSettings;
         } else {
-
-            log("You must call init() before any other method!");
-            return false;
+            return null;
         }
     }
 
     public function openSettings():void
     {
-        if (_initialized) {
+        if (isIOS()) {
 
-            if(isIOS()){
-
-                _context.call("openSettings");
-            }else{
-
-                log("[openSettings] This method is supported only on iOS!");
-            }
-        } else {
-
-            log("You must call init() before any other method!");
+            m_extensionContext.call(NativeMethods.OPEN_SETTINGS);
         }
     }
 
     public function isRemoteNotificationsEnabled():Boolean
     {
-        if (_initialized) {
+        if (isIOS()) {
 
-            if(isIOS()){
-
-                var remoteNotificationsEnabled:Boolean = _context.call("isRemoteNotificationsEnabled") as Boolean;
-                return remoteNotificationsEnabled;
-            }else{
-
-                log("[isRemoteNotificationsEnabled] This method is supported only on iOS!");
-                return false;
-            }
+            var remoteNotificationsEnabled:Boolean = m_extensionContext.call(NativeMethods.IS_REMOTE_NOTIFICATION_ENABLED) as Boolean;
+            return remoteNotificationsEnabled;
         } else {
-
-            log("You must call init() before any other method!");
             return false;
         }
     }
 
     public function getInstallerPackageName():String
     {
-        if (_initialized) {
+        if (isAndroid()) {
 
-            if(isIOS()){
-
-                log("[getInstallerPackageName] This method is supported only on Android!");
-                return null;
-            } else {
-
-                return _context.call("getInstallerPackageName") as String;
-
-            }
+            return m_extensionContext.call(NativeMethods.GET_INSTALLER_PACKAGE_NAME) as String;
         } else {
-
-            log("You must call init() before any other method!");
             return null;
         }
     }
 
     public function immersiveMode(isSticky:Boolean = true):Boolean
     {
-        if (_initialized) {
+        if (isAndroid()) {
 
-            if(isIOS()){
-
-                log("[immersiveMode] This method is supported only on Android!");
-                return false;
-            } else {
-
-                return _context.call("immersiveMode", isSticky) as Boolean;
-            }
+            return m_extensionContext.call(NativeMethods.IMMERSIVE_MODE, isSticky) as Boolean;
         } else {
-
-            log("You must call init() before any other method!");
             return null;
+        }
+    }
+
+    /**
+     * Process invoke events data.
+     * Note: This method must be called from InvokeEvent.INVOKE event handler on iOS for
+     * notification to work properly.
+     *
+     * <code>
+     *     ...
+     *
+     *     NativeApplication.application.addEventListener(InvokeEvent.INVOKE, onInvoke);
+     *
+     *     ...
+     *
+     *     private function onInvoke(event:InvokeEvent):void
+     *     {
+     *          BCommon.getInstance().processInvokeEvent(event.reason, event.arguments);
+     *     }
+     * </code>
+     *
+     * @param reason InvokeEvent.INVOKE reason param
+     * @param arguments InvokeEvent.INVOKE arguments param
+     */
+    public function processInvokeEvent(reason:String, arguments:Array):void
+    {
+        log("processInvokeEvent reason: " + reason + ", args: " + JSON.stringify(arguments));
+        if (reason == INVOKE_REASON_NOTIFICATION && arguments.length > 0) {
+            var data:Object = arguments[0];
+            var notifData:NotificationData = new NotificationData();
+            notifData.action = NOTIFICATION_ACTION_START;
+            notifData.messageId = data.hasOwnProperty(IOS_NOTIFICATION_MESSAGE_ID) ?
+                    data[IOS_NOTIFICATION_MESSAGE_ID] : null;
+            notifData.ref = data.hasOwnProperty(IOS_NOTIFICATION_REF) ?
+                    data[IOS_NOTIFICATION_REF] : null;
+            notifData.actionTime = String((new Date()).time);
+            m_iosNotificationData = notifData;
+        }
+    }
+
+    /**
+     * Inits firebase. 
+     * Note: Must be called on iOS.
+     */
+    public function initFirebase():void
+    {
+        m_extensionContext.call(NativeMethods.INIT_FIREBASE);
+    }
+
+    /**
+     * Gets FCM token if it has been already generated. Otherwise returns null.
+     * Note: Always remember to listen to BCommonEvent.FCM_TOKEN for token refreshes.
+     * @return FCM token
+     */
+    public function getFCMToken():String
+    {
+        return m_extensionContext.call(NativeMethods.GET_FCM_TOKEN) as String;
+    }
+
+    /**
+     * Registers handlers for remote notifications.
+     * Note: Must be called on iOS.
+     */
+    public function registerForRemoteNotifications():void
+    {
+        if(isIOS()){
+            m_extensionContext.call(NativeMethods.REGISTER_FOR_REMOTE_NOTIFICATION);
+        }
+    }
+
+    /**
+     * Gets data about notification which started this app.
+     * @return Last notification data
+     */
+    public function getNotificationData():NotificationData
+    {
+        if(isAndroid()){
+            var jsonData:String = m_extensionContext.call(NativeMethods.GET_NOTIFICATION_DATA) as String;
+            return NotificationData.initByJson(jsonData);
+        } else {
+            return m_iosNotificationData;
         }
     }
 
     public function call(functionName:String, ... args):Object
     {
-        return _context.call.apply(_context, [functionName].concat(args));
+        return m_extensionContext.call.apply(m_extensionContext, [functionName].concat(args));
     }
 
     // --------------------------------------------------------------------------------------//
@@ -307,41 +273,10 @@ public class BCommon extends EventDispatcher {
     // 																						 //
     // --------------------------------------------------------------------------------------//
 
-    private static const EXTENSION_ID:String = "sk.bpositive.BCommon";
-
-    private static var _instance:BCommon;
-    /**
-     * If <code>true</code>, logs will be displayed at the ActionScript level.
-     */
-    public static var logEnabled:Boolean = false;
-    /**
-     * If <code>true</code>, logs will be displayed at the native level.
-     * You must change this before first call of getInstance() to actually see logs in native.
-     */
-    public static var nativeLogEnabled:Boolean = false;
-
-    private var _context:ExtensionContext;
-    private var _requestCallbacks:Object = {};
-
-    private function getNewCallbackName(callback:Function):String
-    {
-        // Generate callback name based on current time
-        var date:Date = new Date();
-        var callbackName:String = date.time.toString();
-
-        // Clean up old callback if the name already exists
-        if (_requestCallbacks.hasOwnProperty(callbackName)) {
-            delete _requestCallbacks[callbackName]
-        }
-
-        // Save new callback under this name
-        _requestCallbacks[callbackName] = callback;
-
-        return callbackName;
-    }
-
     private function onStatus(event:StatusEvent):void
     {
+        trace(event.code, event.level);
+
         var dataArr:Array;
         var callbackName:String;
         var callback:Function;
@@ -418,24 +353,9 @@ public class BCommon extends EventDispatcher {
                 }
             }
         }
-        else // Default case: we check for a registered callback associated with the event code
+        else if(event.code == "FCM_TOKEN")
         {
-            if (_requestCallbacks.hasOwnProperty(event.code)) {
-                callback = _requestCallbacks[event.code];
-
-                if (callback != null) {
-                    try {
-                        data = JSON.parse(event.level);
-                    }
-                    catch (e:Error) {
-                        log("ERROR - " + e);
-                    }
-
-                    callback(data);
-
-                    delete _requestCallbacks[event.code];
-                }
-            }
+            dispatchEvent(new BCommonEvent(BCommonEvent.FCM_TOKEN));
         }
     }
 
@@ -446,10 +366,10 @@ public class BCommon extends EventDispatcher {
      */
     public function log(message:String):void
     {
-        if (BCommon.logEnabled) {
+        if (m_logEnabled) {
             as3Log(message, "AS3");
         }
-        if (BCommon.nativeLogEnabled) {
+        if (m_nativeLogEnabled) {
             nativeLog(message);
         }
     }
@@ -461,9 +381,9 @@ public class BCommon extends EventDispatcher {
 
     private function nativeLog(message:String):void
     {
-        if (_context != null) {
+        if (isSupported) {
 
-            _context.call('nativeLog', message);
+            m_extensionContext.call('nativeLog', message);
         }
     }
 }

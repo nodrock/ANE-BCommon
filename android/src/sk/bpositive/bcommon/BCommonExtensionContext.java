@@ -20,6 +20,12 @@ public class BCommonExtensionContext extends FREContext
 	{
 		Map<String, FREFunction> functions = new HashMap<String, FREFunction>();
 
+		functions.put("isSupported", new IsSupported());
+
+		functions.put("initFirebase", new InitFirebase());
+		functions.put("getFCMToken", new GetFCMToken());
+		functions.put("getNotificationData", new GetNotificationDataFunction());
+
 		functions.put("getLanguageCode", new GetLanguageCodeFunction());
 		functions.put("flagKeepScreenOn", new FlagKeepScreenOn());
 		functions.put("getFlagKeepScreenOn", new GetFlagKeepScreenOn());
