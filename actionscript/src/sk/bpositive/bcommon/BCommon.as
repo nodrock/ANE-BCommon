@@ -279,7 +279,11 @@ public class BCommon extends EventDispatcher {
     {
         length = length == 0 ? data.length : length;
         if (offset + length <= data.length) {
-            return m_extensionContext.native_call(NativeMethods.UPDATE_CRC32, crc, data, offset, length);
+            if (m_extensionContext.isSupported) {
+                return m_extensionContext.native_call(NativeMethods.UPDATE_CRC32, crc, data, offset, length);
+            } else {
+                return CRC32.updateCrc32(crc, data, offset, length);
+            }
         } else {
             throw new ArgumentError("Wrong offset or length!");
         }
