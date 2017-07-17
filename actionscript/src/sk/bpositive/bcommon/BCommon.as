@@ -6,6 +6,8 @@ import flash.events.StatusEvent;
 import flash.system.Capabilities;
 import flash.utils.ByteArray;
 
+import sk.bpositive.bcommon.common.CRC32;
+
 import sk.bpositive.bcommon.common.ExtensionWrapper;
 
 public class BCommon extends EventDispatcher {
@@ -265,7 +267,12 @@ public class BCommon extends EventDispatcher {
     
     public function crc32(data:ByteArray):uint
     {
-        return m_extensionContext.native_call(NativeMethods.CRC32, data);
+        if(m_extensionContext.isSupported){
+            return m_extensionContext.native_call(NativeMethods.CRC32, data);
+        } else {
+            // flash implementation
+            return CRC32.crc32(data);
+        }
     }
 
     public function xcrc32(crc:uint, data:ByteArray, offset:uint = 0, length:uint = 0):uint
