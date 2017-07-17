@@ -6,8 +6,6 @@ import flash.events.StatusEvent;
 import flash.system.Capabilities;
 import flash.utils.ByteArray;
 
-import sk.bpositive.bcommon.NativeMethods;
-
 import sk.bpositive.bcommon.common.ExtensionWrapper;
 
 public class BCommon extends EventDispatcher {
@@ -17,7 +15,7 @@ public class BCommon extends EventDispatcher {
     private static const IOS_NOTIFICATION_MESSAGE_ID:String = "gcm.message_id";
     private static const IOS_NOTIFICATION_REF:String = "ref";
     
-    public static const VERSION:String = "1.1.0";
+    public static const VERSION:String = "1.1.1";
     public static const EXTENSION_ID:String = "sk.bpositive.BCommon";
     private var m_extensionContext:ExtensionWrapper;
 
