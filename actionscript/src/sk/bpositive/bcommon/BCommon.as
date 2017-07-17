@@ -4,6 +4,9 @@ import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
 import flash.events.StatusEvent;
 import flash.system.Capabilities;
+import flash.utils.ByteArray;
+
+import sk.bpositive.bcommon.NativeMethods;
 
 import sk.bpositive.bcommon.common.ExtensionWrapper;
 
@@ -261,8 +264,23 @@ public class BCommon extends EventDispatcher {
             return m_iosNotificationData;
         }
     }
+    
+    public function crc32(data:ByteArray):uint
+    {
+        return m_extensionContext.native_call(NativeMethods.CRC32, data);
+    }
 
-    public function call(functionName:String, ... args):Object
+    public function xcrc32(crc:uint, data:ByteArray, offset:uint = 0, length:uint = 0):uint
+    {
+        length = length == 0 ? data.length : length;
+        if (offset + length <= data.length) {
+            return m_extensionContext.native_call(NativeMethods.UPDATE_CRC32, crc, data, offset, length);
+        } else {
+            throw new ArgumentError("Wrong offset or length!");
+        }
+    }
+
+    public function call(functionName:String, ... args):*
     {
         return m_extensionContext.call.apply(m_extensionContext, [functionName].concat(args));
     }

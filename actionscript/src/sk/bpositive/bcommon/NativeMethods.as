@@ -28,5 +28,8 @@ public class NativeMethods {
     public static const GET_FCM_TOKEN:String = "getFCMToken";
     public static const REGISTER_FOR_REMOTE_NOTIFICATION:String = "registerForRemoteNotifications";
     public static const GET_NOTIFICATION_DATA:String = "getNotificationData";
+
+    public static const CRC32:String = "crc32";
+    public static const UPDATE_CRC32:String = "updateCrc32";
 }
 }

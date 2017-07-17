@@ -38,9 +38,18 @@ public class ExtensionWrapper extends EventDispatcher{
 		dispatchEvent(event);
 	}
 
-	public function call(functionName:String, ...args):Object
+	public function call(functionName:String, ... args):*
 	{
-		trace("call", functionName, args, "context:",_extensionContext)
+		trace("call", functionName, args, "context:", _extensionContext);
+		if(_extensionContext == null){
+			trace("Context is not initialized or wrong platform! Can't call function: " + functionName);
+			return null;
+		}
+		return _extensionContext["call"].apply(_extensionContext, [functionName].concat(args));
+	}
+
+	public function native_call(functionName:String, ... args):*
+	{
 		if(_extensionContext == null){
 			trace("Context is not initialized or wrong platform! Can't call function: " + functionName);
 			return null;

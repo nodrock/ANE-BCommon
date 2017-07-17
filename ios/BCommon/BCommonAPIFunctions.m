@@ -57,6 +57,23 @@ DEFINE_ANE_FUNCTION(crc32)
     return [FREConversionUtil2 fromUInt:crc];
 }
 
+DEFINE_ANE_FUNCTION(updateCrc32)
+{
+    FREByteArray byteArray;
+    uint32_t crc = (uint32_t)[FREConversionUtil2 toUInt:argv[0]];
+    FREAcquireByteArray(argv[1], &byteArray);
+    uint32_t offset = (uint32_t)[FREConversionUtil2 toUInt:argv[2]];
+    uint32_t length = (uint32_t)[FREConversionUtil2 toUInt:argv[3]];
+    
+    if (offset + length <= byteArray.length){
+        crc = (uint32_t) crc32(crc, byteArray.bytes + offset, length);
+    }
+    
+    FREReleaseByteArray(argv[1]);
+    
+    return [FREConversionUtil2 fromUInt:crc];
+}
+
 DEFINE_ANE_FUNCTION(adler32)
 {
     FREByteArray byteArray;

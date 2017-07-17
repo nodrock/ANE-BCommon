@@ -45,6 +45,7 @@ void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                 @"hideSplashView":                  [NSValue valueWithPointer:&BCOMMON(hideSplashView)],
                                 
                                 @"crc32":                           [NSValue valueWithPointer:&BCOMMON(crc32)],
+                                @"updateCrc32":                     [NSValue valueWithPointer:&BCOMMON(updateCrc32)],
                                 @"adler32":                         [NSValue valueWithPointer:&BCOMMON(adler32)],
                                 @"sha1":                            [NSValue valueWithPointer:&BCOMMON(sha1)],
                                 @"md5":                             [NSValue valueWithPointer:&BCOMMON(md5)],
