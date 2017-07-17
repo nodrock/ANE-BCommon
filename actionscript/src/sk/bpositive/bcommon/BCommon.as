@@ -264,7 +264,12 @@ public class BCommon extends EventDispatcher {
             return m_iosNotificationData;
         }
     }
-    
+
+    /**
+     * Computes crc32 of data byte array.
+     * @param data
+     * @return
+     */
     public function crc32(data:ByteArray):uint
     {
         if(m_extensionContext.isSupported){
