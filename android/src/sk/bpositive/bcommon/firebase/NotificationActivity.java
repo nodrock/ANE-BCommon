@@ -20,6 +20,10 @@ public class NotificationActivity extends Activity {
     static final String NOTIFICATION_EXTRA_MESSAGE_ID = "google.message_id";
     static final String NOTIFICATION_EXTRA_REF = "ref";
 
+    static final String START_ACTION_DATA = "start";
+    static final String DELETE_ACTION_DATA = "delete";
+
+
 
     public static NotificationData lastNotification = null;
 
@@ -46,7 +50,13 @@ public class NotificationActivity extends Activity {
         }
         Long actionTime = System.currentTimeMillis();
 
-        lastNotification = new NotificationData(messageId, ref, action, actionTime);
+        // set data action from action 
+        String dataAction = START_ACTION_DATA;
+        if (DELETE_ACTION.equals(action)) {
+            dataAction = DELETE_ACTION_DATA;
+        }
+
+        lastNotification = new NotificationData(messageId, ref, dataAction, actionTime);
 
         Log.i(TAG, "NotificationActivity started!");
         Log.i(TAG, "action:" + action);
