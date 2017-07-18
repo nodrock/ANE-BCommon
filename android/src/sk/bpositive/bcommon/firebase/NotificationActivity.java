@@ -50,7 +50,7 @@ public class NotificationActivity extends Activity {
         }
         Long actionTime = System.currentTimeMillis();
 
-        // set data action from action 
+        // set data action from action
         String dataAction = START_ACTION_DATA;
         if (DELETE_ACTION.equals(action)) {
             dataAction = DELETE_ACTION_DATA;
