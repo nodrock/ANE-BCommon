@@ -54,7 +54,11 @@ public class GetAAIDFunction implements FREFunction {
 						jsonResult = object.toString();
 					} catch (JSONException e) {
 						e.printStackTrace();
-						jsonResult = "{\"error\":\"json_parse_error\", \"message\":\"GameRequestDialog.Result parsing error!\"}";
+						jsonResult = "{\"error\":\"json_parse_error\", \"message\":\"Result parsing error!\"}";
+						BCommonExtension.context.dispatchStatusEventAsync("AAID_FAILED", jsonResult);
+					} catch (NullPointerException e) {
+						e.printStackTrace();
+						jsonResult = "{\"error\":\"json_parse_error\", \"message\":\"advertisingInfo returns null!\"}";
 						BCommonExtension.context.dispatchStatusEventAsync("AAID_FAILED", jsonResult);
 					}
 

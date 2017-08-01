@@ -26,7 +26,6 @@
 		2E152CEF1ED412AA008B429B /* NotificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2E152CED1ED412AA008B429B /* NotificationController.h */; };
 		2E152CF01ED412AA008B429B /* NotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E152CEE1ED412AA008B429B /* NotificationController.m */; };
 		2E152CFA1ED44558008B429B /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E152CF91ED44558008B429B /* UserNotifications.framework */; };
-		2E964AA31DDBB50A007F35B6 /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E964AA21DDBB50A007F35B6 /* ZipArchive.framework */; };
 		2EA4CF6A1BB98958004C3F46 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA4CF691BB98958004C3F46 /* AdSupport.framework */; };
 		2EC5A13A1B9D7F5700335CC3 /* BCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC5A1391B9D7F5700335CC3 /* BCommon.h */; };
 		2EC5A13B1B9D7FD600335CC3 /* BCommon-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = E25E190A18525A56005798D2 /* BCommon-Prefix.pch */; };
@@ -59,7 +58,6 @@
 		2E152CEE1ED412AA008B429B /* NotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationController.m; sourceTree = "<group>"; };
 		2E152CF41ED431AE008B429B /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = SOURCE_ROOT; };
 		2E152CF91ED44558008B429B /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
-		2E964AA21DDBB50A007F35B6 /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipArchive.framework; path = frameworks/ZipArchive.framework; sourceTree = "<group>"; };
 		2EA4CF691BB98958004C3F46 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		2EB172991B77DE920074351E /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2EC5A1391B9D7F5700335CC3 /* BCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCommon.h; sourceTree = "<group>"; };
@@ -81,7 +79,6 @@
 				2E152CFA1ED44558008B429B /* UserNotifications.framework in Frameworks */,
 				2ECCAB521EFA62EF0013EA02 /* FirebaseDynamicLinks.framework in Frameworks */,
 				2E152CE91ED30E1F008B429B /* GoogleToolboxForMac.framework in Frameworks */,
-				2E964AA31DDBB50A007F35B6 /* ZipArchive.framework in Frameworks */,
 				2EA4CF6A1BB98958004C3F46 /* AdSupport.framework in Frameworks */,
 				2E14AA431B1377E200453D81 /* CoreMotion.framework in Frameworks */,
 				2E152CE81ED30E1F008B429B /* FirebaseNanoPB.framework in Frameworks */,
@@ -135,7 +132,6 @@
 				2E152CE01ED30E1E008B429B /* FirebaseNanoPB.framework */,
 				2E152CE11ED30E1E008B429B /* GoogleToolboxForMac.framework */,
 				2E152CE21ED30E1E008B429B /* Protobuf.framework */,
-				2E964AA21DDBB50A007F35B6 /* ZipArchive.framework */,
 				2EA4CF691BB98958004C3F46 /* AdSupport.framework */,
 				2EB172991B77DE920074351E /* StoreKit.framework */,
 				2E14AA421B1377E200453D81 /* CoreMotion.framework */,

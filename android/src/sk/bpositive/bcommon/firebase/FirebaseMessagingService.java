@@ -61,111 +61,113 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         Log.i(TAG, "Data: " + message.getData());
         Log.i(TAG, "Notification: " + message.getNotification());
 
-        String title = message.getData().get("title");
-        String body = message.getData().get("body");
-        String icon = message.getData().get("icon");
-        String color = message.getData().get("color");
-        String clickAction = message.getData().get("click_action");
-        boolean autoCancel = message.getData().get("auto_cancel") == null || "true".equals(message.getData().get("auto_cancel"));
+        if (message.getData() != null && message.getData().size() > 0) {
+            String title = message.getData().get("title");
+            String body = message.getData().get("body");
+            String icon = message.getData().get("icon");
+            String color = message.getData().get("color");
+            String clickAction = message.getData().get("click_action");
+            boolean autoCancel = message.getData().get("auto_cancel") == null || "true".equals(message.getData().get("auto_cancel"));
 
-        String largeIconUrl = message.getData().get("large_icon_url");
-        String bigImageUrl = message.getData().get("big_image_url");
+            String largeIconUrl = message.getData().get("large_icon_url");
+            String bigImageUrl = message.getData().get("big_image_url");
 
-        String bigContentTitle = message.getData().get("big_content_title");
-        String summaryText = message.getData().get("summary_text");
+            String bigContentTitle = message.getData().get("big_content_title");
+            String summaryText = message.getData().get("summary_text");
 
-        String when = message.getData().get("when");
-        String showWhen = message.getData().get("show_when");
-        String usesChronometer = message.getData().get("uses_chronometer");
+            String when = message.getData().get("when");
+            String showWhen = message.getData().get("show_when");
+            String usesChronometer = message.getData().get("uses_chronometer");
 
-        String ref = message.getData().get("ref");
+            String ref = message.getData().get("ref");
 
-        Bitmap largeIconBitmap = getBitmapfromUrl(largeIconUrl);
-        Bitmap bigImageBitmap = getBitmapfromUrl(bigImageUrl);
+            Bitmap largeIconBitmap = getBitmapfromUrl(largeIconUrl);
+            Bitmap bigImageBitmap = getBitmapfromUrl(bigImageUrl);
 
-        // process icon
-        int smallIconId = getIconResource(getApplicationContext().getResources(), icon);
-        if(smallIconId == 0){
-            BCommonExtension.log("Wrong icon resource id!");
-        }
+            // process icon
+            int smallIconId = getIconResource(getApplicationContext().getResources(), icon);
+            if (smallIconId == 0) {
+                BCommonExtension.log("Wrong icon resource id!");
+            }
 
-        // process click_action
-        PendingIntent pendingIntent = null;
-        if(clickAction == null) {
-            Intent intent = new Intent(this, NotificationActivity.class);
-            intent.setAction(NotificationActivity.START_ACTION);
-            intent.putExtra(NotificationActivity.EXTRA_MESSAGE_ID, messageId);
-            intent.putExtra(NotificationActivity.EXTRA_REF, ref);
-            pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+            // process click_action
+            PendingIntent pendingIntent = null;
+            if (clickAction == null) {
+                Intent intent = new Intent(this, NotificationActivity.class);
+                intent.setAction(NotificationActivity.START_ACTION);
+                intent.putExtra(NotificationActivity.EXTRA_MESSAGE_ID, messageId);
+                intent.putExtra(NotificationActivity.EXTRA_REF, ref);
+                pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                        PendingIntent.FLAG_ONE_SHOT);
+            } else if (DO_NOT_OPEN.equals(clickAction)) {
+                pendingIntent = null;
+            }
+
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
+                    .setSmallIcon(smallIconId)
+                    .setContentTitle(title)
+                    .setContentText(body)
+                    .setAutoCancel(autoCancel);
+
+            if (when != null) {
+                notificationBuilder.setWhen(Long.parseLong(when));
+            }
+            if (showWhen != null) {
+                notificationBuilder.setShowWhen("true".equals(showWhen));
+            }
+            if (usesChronometer != null) {
+                notificationBuilder.setUsesChronometer("true".equals(usesChronometer));
+            }
+
+            if (bigImageBitmap != null) {
+                NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle()
+                        .bigPicture(bigImageBitmap);
+
+                if (bigContentTitle != null) {
+                    bigPictureStyle.setBigContentTitle(bigContentTitle);
+                }
+
+                if (summaryText != null) {
+                    bigPictureStyle.setSummaryText(summaryText);
+                } else {
+                    // We put body here otherwise there is empty line if you have opened you image. (on Android 6)
+                    bigPictureStyle.setSummaryText(body);
+                }
+
+                notificationBuilder.setStyle(bigPictureStyle);
+            }
+
+            if (largeIconBitmap != null) {
+                notificationBuilder.setLargeIcon(getBitmapfromUrl(largeIconUrl));
+            }
+
+            if (color != null) {
+                try {
+                    notificationBuilder.setColor(Color.parseColor(color));
+                } catch (IllegalArgumentException ex) {
+                    BCommonExtension.log("Wrong color string -> ignoring! color: " + color);
+                }
+            }
+
+            if (pendingIntent != null) {
+                notificationBuilder.setContentIntent(pendingIntent);
+            }
+
+            Intent deleteIntent = new Intent(this, NotificationActivity.class);
+            deleteIntent.setAction(NotificationActivity.DELETE_ACTION);
+            deleteIntent.putExtra(NotificationActivity.EXTRA_MESSAGE_ID, messageId);
+            deleteIntent.putExtra(NotificationActivity.EXTRA_REF, ref);
+            PendingIntent deletePendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, deleteIntent,
                     PendingIntent.FLAG_ONE_SHOT);
-        } else if (DO_NOT_OPEN.equals(clickAction)) {
-            pendingIntent = null;
+            notificationBuilder.setDeleteIntent(deletePendingIntent);
+
+            parseActions(message, notificationBuilder);
+
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
         }
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(smallIconId)
-                .setContentTitle(title)
-                .setContentText(body)
-                .setAutoCancel(autoCancel);
-
-        if (when != null) {
-            notificationBuilder.setWhen(Long.parseLong(when));
-        }
-        if (showWhen != null) {
-            notificationBuilder.setShowWhen("true".equals(showWhen));
-        }
-        if (usesChronometer != null) {
-            notificationBuilder.setUsesChronometer("true".equals(usesChronometer));
-        }
-
-        if (bigImageBitmap != null) {
-            NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle()
-                    .bigPicture(bigImageBitmap);
-
-            if (bigContentTitle != null) {
-                bigPictureStyle.setBigContentTitle(bigContentTitle);
-            }
-
-            if (summaryText != null) {
-                bigPictureStyle.setSummaryText(summaryText);
-            } else {
-                // We put body here otherwise there is empty line if you have opened you image. (on Android 6)
-                bigPictureStyle.setSummaryText(body);
-            }
-
-            notificationBuilder.setStyle(bigPictureStyle);
-        }
-
-        if (largeIconBitmap != null) {
-            notificationBuilder.setLargeIcon(getBitmapfromUrl(largeIconUrl));
-        }
-
-        if (color != null) {
-            try {
-                notificationBuilder.setColor(Color.parseColor(color));
-            } catch (IllegalArgumentException ex){
-                BCommonExtension.log("Wrong color string -> ignoring! color: " + color);
-            }
-        }
-
-        if (pendingIntent != null) {
-            notificationBuilder.setContentIntent(pendingIntent);
-        }
-
-        Intent deleteIntent = new Intent(this, NotificationActivity.class);
-        deleteIntent.setAction(NotificationActivity.DELETE_ACTION);
-        deleteIntent.putExtra(NotificationActivity.EXTRA_MESSAGE_ID, messageId);
-        deleteIntent.putExtra(NotificationActivity.EXTRA_REF, ref);
-        PendingIntent deletePendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, deleteIntent,
-                PendingIntent.FLAG_ONE_SHOT);
-        notificationBuilder.setDeleteIntent(deletePendingIntent);
-
-        parseActions(message, notificationBuilder);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
     // [END receive_message]
 
@@ -209,6 +211,10 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     private int getIconResource(Resources resources, String resourceName)
     {
+        if (resourceName == null) {
+            return 0;
+        }
+
         Matcher matcher = RESOURCE_PATTERN.matcher(resourceName);
         if(matcher.find()){
             return resources.getIdentifier(matcher.group(2), matcher.group(1), getPackageName());
@@ -220,21 +226,24 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     /*
     *To get a Bitmap image from the URL received
     * */
-    private Bitmap getBitmapfromUrl(String imageUrl) {
+    private Bitmap getBitmapfromUrl(String imageUrl)
+    {
+        if (imageUrl == null) {
+            return null;
+        }
+
         try {
             URL url = new URL(imageUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return bitmap;
+            return BitmapFactory.decodeStream(input);
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
-
         }
     }
 }
