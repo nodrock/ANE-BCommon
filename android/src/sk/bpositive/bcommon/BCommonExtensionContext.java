@@ -37,6 +37,8 @@ public class BCommonExtensionContext extends FREContext
 		functions.put("unzipFile", new UnzipFileFunction());
 		functions.put("getInstallerPackageName", new GetInstallerPackageName());
 		functions.put("immersiveMode", new ImmersiveModeFunction());
+		functions.put("deviceInfo", new GetDeviceInfoToken());
+
 
 		// Debug
 		functions.put("nativeLog", new NativeLogFunction());

@@ -3,6 +3,7 @@ package sk.bpositive.bcommon.functions;
 import com.adobe.fre.*;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -12,13 +13,15 @@ public class SHA1Function implements FREFunction {
     public FREObject call(FREContext freContext, FREObject[] freObjects) {
 
         try {
-
             FREByteArray byteArray = (FREByteArray) freObjects[0];
 
             byteArray.acquire();
 
             MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(byteArray.getBytes().array());
+
+            ByteBuffer byteBuffer = byteArray.getBytes();
+            md.update(byteBuffer);
+
             byte[] digest = md.digest();
             BigInteger number = new BigInteger(1, digest);
             String digestString = number.toString(16);

@@ -1,5 +1,6 @@
 ﻿package sk.bpositive.bcommon {
 
+import flash.errors.IllegalOperationError;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
 import flash.events.StatusEvent;
@@ -17,7 +18,7 @@ public class BCommon extends EventDispatcher {
     private static const IOS_NOTIFICATION_MESSAGE_ID:String = "gcm.message_id";
     private static const IOS_NOTIFICATION_REF:String = "ref";
     
-    public static const VERSION:String = "1.1.1";
+    public static const VERSION:String = "1.3.0";
     public static const EXTENSION_ID:String = "sk.bpositive.BCommon";
     private var m_extensionContext:ExtensionWrapper;
 
@@ -69,6 +70,9 @@ public class BCommon extends EventDispatcher {
         m_extensionContext.call(NativeMethods.SET_NATIVE_LOG_ENABLED, nativeLog);
     }
 
+    /**
+     * Returns two-letter language code according to ISO 639-1.
+     */
     public function getLanguageCode():String
     {
         return m_extensionContext.call(NativeMethods.GET_LANGUAGE_CODE) as String;
@@ -223,7 +227,7 @@ public class BCommon extends EventDispatcher {
 
     /**
      * Inits firebase. 
-     * Note: Must be called on iOS.
+     * Note: Must be called on iOS. Should be called on Android to init google analytics.
      */
     public function initFirebase():void
     {
@@ -291,6 +295,30 @@ public class BCommon extends EventDispatcher {
             }
         } else {
             throw new ArgumentError("Wrong offset or length!");
+        }
+    }
+
+    /**
+     * Computes sha1 of byte array.
+     * @param data
+     * @return
+     */
+    public function sha1(data:ByteArray):uint
+    {
+        if(m_extensionContext.isSupported){
+            return m_extensionContext.native_call(NativeMethods.SHA1, data);
+        } else {
+            // flash implementation
+            throw new IllegalOperationError("SHA1 is not supported on flash yet!")
+        }
+    }
+
+    public function getDeviceInfoJson():String
+    {
+        if (isAndroid()) {
+            return m_extensionContext.call(NativeMethods.DEVICE_INFO);
+        } else {
+            return null;
         }
     }
 
