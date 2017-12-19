@@ -19,10 +19,13 @@ public class NativeMethods {
 
     public static const GET_ANDROID_ID:String = "getAndroidId";
     public static const GET_AAID:String = "getAAID";
+    public static const GET_AMAZON_AD_ID:String = "getAmazonAdID";
     public static const FLAG_KEEP_SCREEN_ON:String = "flagKeepScreenOn";
     public static const REGISTER_GCM:String = "registerGCM";
     public static const GET_INSTALLER_PACKAGE_NAME:String = "getInstallerPackageName";
     public static const IMMERSIVE_MODE:String = "immersiveMode";
+    public static const GET_MANIFEST_METADATA:String = "getManifestMetadata";
+    public static const GET_RESOURCE_STRING:String = "getResourceString";
 
     public static const INIT_FIREBASE:String = "initFirebase";
     public static const GET_FCM_TOKEN:String = "getFCMToken";

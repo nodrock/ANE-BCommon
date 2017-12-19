@@ -38,7 +38,9 @@ public class BCommonExtensionContext extends FREContext
 		functions.put("getInstallerPackageName", new GetInstallerPackageName());
 		functions.put("immersiveMode", new ImmersiveModeFunction());
 		functions.put("deviceInfo", new GetDeviceInfoToken());
-
+		functions.put("getResourceString", new GetResourceString());
+		functions.put("getManifestMetadata", new GetManifestMetadata());
+		functions.put("getAmazonAdID", new GetAmazonAdvertisingId());
 
 		// Debug
 		functions.put("nativeLog", new NativeLogFunction());

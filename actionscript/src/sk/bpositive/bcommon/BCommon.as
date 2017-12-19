@@ -18,7 +18,7 @@ public class BCommon extends EventDispatcher {
     private static const IOS_NOTIFICATION_MESSAGE_ID:String = "gcm.message_id";
     private static const IOS_NOTIFICATION_REF:String = "ref";
     
-    public static const VERSION:String = "1.3.0";
+    public static const VERSION:String = "1.4.0";
     public static const EXTENSION_ID:String = "sk.bpositive.BCommon";
     private var m_extensionContext:ExtensionWrapper;
 
@@ -110,11 +110,37 @@ public class BCommon extends EventDispatcher {
         }
     }
 
+    public function getAmazonAdID():BCommonAmazonAdID
+    {
+        if (isAndroid()){
+
+            var json:String = m_extensionContext.call(NativeMethods.GET_AMAZON_AD_ID);
+            return BCommonAmazonAdID.createFromJSON(json);
+        }
+        return null;
+    }
+
     public function getAAID():void
     {
         if (isAndroid()) {
 
             m_extensionContext.call(NativeMethods.GET_AAID);
+        }
+    }
+
+    public function getManifestMetadata(name:String):void
+    {
+        if (isAndroid()) {
+
+            m_extensionContext.call(NativeMethods.GET_MANIFEST_METADATA, name);
+        }
+    }
+
+    public function getResourceString(id:String):void
+    {
+        if (isAndroid()) {
+
+            m_extensionContext.call(NativeMethods.GET_RESOURCE_STRING, id);
         }
     }
 
