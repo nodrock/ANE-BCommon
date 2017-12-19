@@ -1,11 +1,11 @@
 package sk.bpositive.bcommon.firebase;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+
+import sk.bpositive.bcommon.BCommonEvents;
 import sk.bpositive.bcommon.BCommonExtension;
 
 public class FirebaseInstanceIdService extends com.google.firebase.iid.FirebaseInstanceIdService {
-
-    private static final String TAG = "FirebaseInstanceIdService";
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of
@@ -17,9 +17,8 @@ public class FirebaseInstanceIdService extends com.google.firebase.iid.FirebaseI
     public void onTokenRefresh() {
 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        BCommonExtension.log("FCM_TOKEN: " + refreshedToken);
         if(BCommonExtension.context != null) {
-            BCommonExtension.context.dispatchStatusEventAsync("FCM_TOKEN", refreshedToken);
+            BCommonExtension.context.dispatchEvent(BCommonEvents.FCM_TOKEN, refreshedToken);
         }
     }
     // [END refresh_token]

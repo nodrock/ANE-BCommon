@@ -31,19 +31,27 @@ public class BCommonExtensionContext extends FREContext
 		functions.put("getFlagKeepScreenOn", new GetFlagKeepScreenOn());
 		functions.put("getAAID", new GetAAIDFunction());
 		functions.put("getAndroidId", new GetAndroidId());
-		functions.put("registerGCM", new RegisterGCM());
 		functions.put("crc32", new CRC32Function());
 		functions.put("sha1", new SHA1Function());
 		functions.put("unzipFile", new UnzipFileFunction());
 		functions.put("getInstallerPackageName", new GetInstallerPackageName());
 		functions.put("immersiveMode", new ImmersiveModeFunction());
 		functions.put("deviceInfo", new GetDeviceInfoToken());
-
+		functions.put("getResourceString", new GetResourceString());
+		functions.put("getManifestMetadata", new GetManifestMetadata());
+		functions.put("getAmazonAdID", new GetAmazonAdvertisingId());
+		functions.put("getAdId", new GetAdvertisingId());
 
 		// Debug
 		functions.put("nativeLog", new NativeLogFunction());
 		functions.put("setNativeLogEnabled", new SetNativeLogEnabledFunction());
 
 		return functions;	
+	}
+
+	public void dispatchEvent(String type, String data)
+	{
+		BCommonExtension.log("Dispatch event! type: " + type + " data: " + data);
+		dispatchStatusEventAsync(type, data);
 	}
 }

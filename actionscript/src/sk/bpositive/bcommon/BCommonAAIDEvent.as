@@ -4,6 +4,9 @@
 package sk.bpositive.bcommon {
 import flash.events.Event;
 
+/**
+ * @deprecated
+ */
 public class BCommonAAIDEvent extends Event{
 
     public var aaid:BCommonAAID;

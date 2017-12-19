@@ -8,10 +8,12 @@ import sk.bpositive.bcommon.utils.FREConversionUtil;
 
 import java.io.File;
 
-public class UnzipFileFunction implements FREFunction {
+public class UnzipFileFunction extends BaseFunction {
 
     @Override
-    public FREObject call(FREContext freContext, FREObject[] freObjects) {
+    public FREObject call(FREContext context, FREObject[] args) {
+
+        super.call(context, args);
 
 //        try {
 //

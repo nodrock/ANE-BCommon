@@ -1,20 +1,17 @@
 package sk.bpositive.bcommon.firebase;
 
 import android.app.Activity;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+
+import sk.bpositive.bcommon.BCommonExtension;
 
 public class NotificationActivity extends Activity {
 
-    private static final String TAG = "NotificationActivity";
     static final String START_ACTION = "sk.bpositive.bcommon.NotificationActivity.START";
     static final String DELETE_ACTION = "sk.bpositive.bcommon.NotificationActivity.DELETE";
     static final String EXTRA_REF = "sk.bpositive.bcommon.NotificationActivity.EXTRA_REF";
     static final String EXTRA_MESSAGE_ID = "sk.bpositive.bcommon.NotificationActivity.EXTRA_MESSAGE_ID";
-    static final String EXTRA_NOTIFICATION_ID = "sk.bpositive.bcommon.NotificationActivity.NOTIFICATION_ID";
     // used if notification payload is sent
     static final String NOTIFICATION_ACTION = "NOTIFICATION_ACTION"; // used in click_action
     static final String NOTIFICATION_EXTRA_MESSAGE_ID = "google.message_id";
@@ -23,24 +20,32 @@ public class NotificationActivity extends Activity {
     static final String START_ACTION_DATA = "start";
     static final String DELETE_ACTION_DATA = "delete";
 
-
-
     public static NotificationData lastNotification = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                String value = getIntent().getExtras().getString(key);
-                Log.d(TAG, "Key: " + key + " Value: " + value);
+        BCommonExtension.log("NotificationActivity started!");
+
+        if (BCommonExtension.debugLogEnabled) {
+            if (getIntent().getExtras() != null) {
+                for (String key : getIntent().getExtras().keySet()) {
+                    try {
+                        String value = getIntent().getExtras().getString(key);
+                        BCommonExtension.debug("Key: " + key + " Value: " + value);
+                    } catch (Throwable t) {
+                        BCommonExtension.debug("Key: " + key, t);
+                    }
+                }
             }
-        }*/
+        }
 
         String action = getIntent().getAction();
+        BCommonExtension.log("Action: " + action);
         String messageId;
         String ref;
+        // native start from notification payload
         if (action.endsWith(NOTIFICATION_ACTION)) {
             messageId = getIntent().getStringExtra(NOTIFICATION_EXTRA_MESSAGE_ID);
             ref = getIntent().getStringExtra(NOTIFICATION_EXTRA_REF);
@@ -58,38 +63,21 @@ public class NotificationActivity extends Activity {
 
         lastNotification = new NotificationData(messageId, ref, dataAction, actionTime);
 
-        Log.i(TAG, "NotificationActivity started!");
-        Log.i(TAG, "action:" + action);
-        Log.i(TAG, "messageId:" + messageId);
-        Log.i(TAG, "ref:" + ref);
+        BCommonExtension.log("Stored NotificationData: " + lastNotification);
 
         if (DELETE_ACTION.equals(action)) {
 
-        } else if (START_ACTION.equals(action)){
-
-            startApp();
-        } else {
-
-            if (getIntent().hasExtra(EXTRA_NOTIFICATION_ID)) {
-                int notificationId = getIntent().getIntExtra(EXTRA_NOTIFICATION_ID, 0);
-
-                Log.i(TAG, "notificationId:" + notificationId);
-
-                NotificationManager notificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-                notificationManager.cancel(notificationId);
-            }
-
-            startApp();
+            finish();
+            return;
         }
 
+        startApp();
         finish();
     }
 
     private void startApp()
     {
-        Log.i(TAG, "startApp");
+        BCommonExtension.log("NotificationActivity.startApp()");
         try {
             Intent intent = new Intent(this, Class.forName(getPackageName() + ".AppEntry"));
             startActivity(intent);

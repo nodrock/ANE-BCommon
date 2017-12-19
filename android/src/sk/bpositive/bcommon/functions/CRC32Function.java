@@ -1,20 +1,25 @@
 package sk.bpositive.bcommon.functions;
 
-import com.adobe.fre.*;
-import sk.bpositive.bcommon.BCommonExtension;
+import com.adobe.fre.FREByteArray;
+import com.adobe.fre.FREContext;
+import com.adobe.fre.FREInvalidObjectException;
+import com.adobe.fre.FREObject;
+import com.adobe.fre.FREWrongThreadException;
 
 import java.nio.ByteBuffer;
 import java.util.zip.CRC32;
 
-public class CRC32Function implements FREFunction {
+public class CRC32Function extends BaseFunction {
 
     private static final int BUFFER_SIZE = 4096;
 
     @Override
-    public FREObject call(FREContext freContext, FREObject[] freObjects) {
+    public FREObject call(FREContext context, FREObject[] args) {
+
+        super.call(context, args);
 
         try {
-            FREByteArray byteArray = (FREByteArray) freObjects[0];
+            FREByteArray byteArray = (FREByteArray) args[0];
 
             byteArray.acquire();
 

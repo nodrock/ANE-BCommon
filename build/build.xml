@@ -63,7 +63,7 @@
         <!--<copy file="../android/libs/android-support-v4.jar" todir="temp/android/"/>-->
 
         <unzip src="../android/build/outputs/aar/android-release.aar" dest="../android/build/aar" overwrite="true"/>
-
+<!--<fail message="debug"/>-->
         <copy file="../android/build/aar/classes.jar" tofile="temp/android/lib${name}.jar"/>
 
         <!-- Copy over required resources -->
@@ -72,7 +72,7 @@
         <!--</copy>-->
 
         <copy todir="temp/android/res/">
-            <fileset dir="../android/res/"/>
+            <fileset dir="../android/build/aar/res/"/>
         </copy>
 
         <!-- remove the build classes -->

@@ -10,9 +10,12 @@ import sk.bpositive.bcommon.utils.FREConversionUtil;
 /**
  * Created by nodrock on 19/10/16.
  */
-public class ImmersiveModeFunction implements FREFunction {
+public class ImmersiveModeFunction extends BaseFunction {
     @Override
     public FREObject call(FREContext context, FREObject[] args) {
+
+        super.call(context, args);
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
         {
             return FREConversionUtil.fromBoolean(false);

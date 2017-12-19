@@ -2,6 +2,9 @@
  * Created by nodrock on 28/09/15.
  */
 package sk.bpositive.bcommon {
+/**
+ * @deprecated
+ */
 public class BCommonAAID {
 
     private var _id:String;
@@ -16,7 +19,7 @@ public class BCommonAAID {
         var aaid:BCommonAAID = new BCommonAAID();
         var jsonObject:Object = JSON.parse(json);
         aaid._id = jsonObject["id"] as String;
-        aaid._limitAdTrackingEnabled = jsonObject["limitAdTrackingEnabled"] as Boolean;
+        aaid._limitAdTrackingEnabled = !(jsonObject["trackingEnabled"] as Boolean);
         return aaid;
     }
 

@@ -10,10 +10,12 @@ import org.json.JSONObject;
 import sk.bpositive.bcommon.BCommonExtension;
 import sk.bpositive.bcommon.utils.FREConversionUtil;
 
-public class GetDeviceInfoToken implements FREFunction {
+public class GetDeviceInfoToken extends BaseFunction {
 
     @Override
-    public FREObject call(FREContext freContext, FREObject[] freObjects) {
+    public FREObject call(FREContext context, FREObject[] args) {
+
+        super.call(context, args);
 
         String deviceInfo = null;
 

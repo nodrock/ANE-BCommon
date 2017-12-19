@@ -1,4 +1,5 @@
 #import "BCommon.h"
+#import "BCommonEvents.h"
 
 @implementation BCommon {
     
@@ -36,13 +37,27 @@ static BCommon *sharedInstance = nil;
     return self;
 }
 
-// every time we have to send back information to the air application, invoque this method wich will dispatch an Event in air
-- (void)dispatchEvent:(NSString *)event withMessage:(NSString *)message
+- (void)dispatchEvent:(NSString *)event
+{
+    [self dispatchEvent:event withData:nil];
+}
+
+- (void)dispatchEvent:(NSString *)event withData:(NSString *)data
 {
     if(self.context != nil){
+        NSLog(@"Dispatch event! type: %@ data: %@", event, data);
+
         NSString *eventName = event ? event : @"LOGGING";
-        NSString *messageText = message ? message : @"";
-        FREDispatchStatusEventAsync(self.context, (const uint8_t *)[eventName UTF8String], (const uint8_t *)[messageText UTF8String]);
+        NSString *eventData = data ? data : @"";
+        FREDispatchStatusEventAsync(self.context, (const uint8_t *)[eventName UTF8String], (const uint8_t *)[eventData UTF8String]);
+    }
+}
+
+- (void)log:(NSString *)message
+{
+    if(self.context != nil && message != nil){
+
+        FREDispatchStatusEventAsync(self.context, (const uint8_t *)[@"LOGGING" UTF8String], (const uint8_t *)[message UTF8String]);
     }
 }
 
@@ -64,7 +79,7 @@ static BCommon *sharedInstance = nil;
 
 + (void)as3Log:(NSString *)message
 {
-    [[BCommon sharedInstance] dispatchEvent:@"LOGGING" withMessage:message];
+    [[BCommon sharedInstance] log:message];
 }
 
 + (void)nativeLog:(NSString *)message withPrefix:(NSString *)prefix
@@ -96,7 +111,7 @@ static BCommon *sharedInstance = nil;
 
 - (void)didReceiveMemoryWarning:(NSNotification *)notification
 {
-    [self dispatchEvent:@"NOTIFICATION" withMessage:@"{\"type\":\"MEMORY_WARNING\"}"];
+    [self dispatchEvent:BCOMMON_EVENT_MEMORY_WARNING];
 }
 
 @end

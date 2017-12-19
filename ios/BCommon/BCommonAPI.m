@@ -34,6 +34,7 @@ void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                 @"isSupported":                     [NSValue valueWithPointer:&BCOMMON(isSupported)],
                                 
                                 @"getLanguageCode":                 [NSValue valueWithPointer:&BCOMMON(getLanguageCode)],
+                                @"getAdId":                         [NSValue valueWithPointer:&BCOMMON(getAdId)],
                                 @"getIDFV":                         [NSValue valueWithPointer:&BCOMMON(getIDFV)],
                                 @"getIDFA":                         [NSValue valueWithPointer:&BCOMMON(getIDFA)],
                                 @"getIDFATrackingEnabled":          [NSValue valueWithPointer:&BCOMMON(getIDFATrackingEnabled)],

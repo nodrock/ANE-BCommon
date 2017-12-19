@@ -7,9 +7,10 @@ import com.adobe.fre.FREExtension;
 
 public class BCommonExtension implements FREExtension
 {
-	
 	public static String TAG = "BCommon";
 	public static Boolean nativeLogEnabled = true;
+	public static Boolean debugLogEnabled = false;
+	public static Boolean isAppActive = false;
 	
 	public static BCommonExtensionContext context;
 
@@ -44,6 +45,22 @@ public class BCommonExtension implements FREExtension
 		if (nativeLogEnabled) {
 
 			Log.i(TAG, "[" + prefix + "] " + message);
+		}
+	}
+
+	public static void debug(String msg)
+	{
+		if (debugLogEnabled)
+		{
+			Log.d(TAG, msg);
+		}
+	}
+
+	public static void debug(String msg, Throwable throwable)
+	{
+		if (debugLogEnabled)
+		{
+			Log.d(TAG, msg, throwable);
 		}
 	}
 	

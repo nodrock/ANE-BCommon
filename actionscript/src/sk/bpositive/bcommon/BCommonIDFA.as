@@ -2,6 +2,10 @@
  * Created by nodrock on 28/09/15.
  */
 package sk.bpositive.bcommon {
+
+/**
+ * @deprecated
+ */
 public class BCommonIDFA {
 
     private var _advertisingIdentifier:String;

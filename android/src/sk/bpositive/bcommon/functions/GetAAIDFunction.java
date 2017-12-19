@@ -1,40 +1,27 @@
 package sk.bpositive.bcommon.functions;
 
-
-import java.io.IOException;
-
 import android.content.Context;
 
 import com.adobe.fre.FREContext;
-import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import org.json.JSONException;
+
 import org.json.JSONObject;
+
+import java.io.IOException;
+
+import sk.bpositive.bcommon.BCommonEvents;
 import sk.bpositive.bcommon.BCommonExtension;
 
-public class GetAAIDFunction implements FREFunction {
+public class GetAAIDFunction extends BaseFunction {
 	
-	public FREObject call(FREContext ctx, FREObject[] args) {
+	public FREObject call(FREContext context, FREObject[] args) {
 
-		BCommonExtension.log("GetAAIDFunction");
+		super.call(context, args);
 
-		final Context	context		= ctx.getActivity().getApplicationContext();
-
-		int connectionResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
-		if(connectionResult == ConnectionResult.SUCCESS){
-
-			BCommonExtension.log("GOOGLE_API_AVAILABLE");
-		}else{
-
-			BCommonExtension.log("GOOGLE_API_NOT_AVAILABLE connectionResult:" + connectionResult);
-			BCommonExtension.context.dispatchStatusEventAsync("AAID_FAILED", "{\"error\": \"google_api_not_available\"}");
-			return null;
-		}
+		final Context	ctx		= context.getActivity().getApplicationContext();
 
 		// getAdvertisingIdInfo needs to be handled in a separate thread
 		Thread aaidThread = new Thread(new Runnable() {
@@ -44,33 +31,14 @@ public class GetAAIDFunction implements FREFunction {
 				
 				try {
 
-					AdvertisingIdClient.Info advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(context);
-
-					String jsonResult;
-					try {
-						JSONObject object = new JSONObject();
-						object.put("id", advertisingIdInfo.getId());
-						object.put("limitAdTrackingEnabled", advertisingIdInfo.isLimitAdTrackingEnabled());
-						jsonResult = object.toString();
-					} catch (JSONException e) {
-						e.printStackTrace();
-						jsonResult = "{\"error\":\"json_parse_error\", \"message\":\"Result parsing error!\"}";
-						BCommonExtension.context.dispatchStatusEventAsync("AAID_FAILED", jsonResult);
-					} catch (NullPointerException e) {
-						e.printStackTrace();
-						jsonResult = "{\"error\":\"json_parse_error\", \"message\":\"advertisingInfo returns null!\"}";
-						BCommonExtension.context.dispatchStatusEventAsync("AAID_FAILED", jsonResult);
-					}
-
-					BCommonExtension.log("AAID_COMPLETED json:" + jsonResult);
-					BCommonExtension.context.dispatchStatusEventAsync("AAID_COMPLETED", jsonResult);
+					AdvertisingIdClient.Info advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(ctx);
+					String jsonResult = createResultJson(advertisingIdInfo.getId(), !advertisingIdInfo.isLimitAdTrackingEnabled());
+					BCommonExtension.context.dispatchEvent(BCommonEvents.AD_IDENTIFIER, jsonResult);
 				} 
 				catch (IllegalStateException | GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException | IOException e) {
 
 					e.printStackTrace();
-					BCommonExtension.log("AAID_FAILED message:" + e.getMessage());
-					// TODO: spravit si classu na generovanie tychto error jsonov v stringovej podobe
-					BCommonExtension.context.dispatchStatusEventAsync("AAID_FAILED", "{\"error\": \"exception\"}");
+					BCommonExtension.context.dispatchEvent(BCommonEvents.AD_IDENTIFIER, createErrorJson(e.getMessage()));
 				}
 			}
 		});
@@ -78,5 +46,31 @@ public class GetAAIDFunction implements FREFunction {
 		aaidThread.start();
 		
 		return null;
+	}
+
+	private static String createResultJson(String id, boolean trackingEnabled) {
+		try {
+			JSONObject object = new JSONObject();
+			object.put("type", "AAID");
+			object.put("id", id);
+			object.put("trackingEnabled", trackingEnabled);
+			return object.toString();
+		} catch (Throwable t) {
+			t.printStackTrace();
+			return null;
+		}
+	}
+
+	private static String createErrorJson(String error)
+	{
+		try {
+			JSONObject object = new JSONObject();
+			object.put("type", "AAID");
+			object.put("error", error);
+			return object.toString();
+		} catch (Throwable t) {
+			t.printStackTrace();
+			return null;
+		}
 	}
 }

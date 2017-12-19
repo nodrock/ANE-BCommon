@@ -3,9 +3,9 @@
         <!--<packagedDependency>play-services-ads-7.8.0.jar</packagedDependency>-->
     </packagedDependencies>
     <packagedResources>
-        <!--<packagedResource>-->
-            <!--<packageName>com.google.android.gms.ads</packageName>-->
-            <!--<folderName>play-services-ads-7.8.0-res</folderName>-->
-        <!--</packagedResource>-->
+        <packagedResource>
+            <packageName>sk.bpositive.bcommon</packageName>
+            <folderName>res</folderName>
+        </packagedResource>
     </packagedResources>
 </platform>

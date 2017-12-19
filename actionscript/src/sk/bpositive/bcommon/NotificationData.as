@@ -8,14 +8,12 @@ public class NotificationData {
     public var ref:String;
     public var action:String;
     public var actionTime:String;
-    public var json:String;
 
     public static function initByJson(json:String):NotificationData
     {
         try {
             var obj:Object = JSON.parse(json);
             var notificationData:NotificationData = new NotificationData();
-            notificationData.json = json;
             notificationData.messageId = obj["messageId"];
             notificationData.ref = obj["ref"];
             notificationData.action = obj["action"];
@@ -25,6 +23,11 @@ public class NotificationData {
             trace("NotificationData creation failed! notificationData:", json)
         }
         return null;
+    }
+
+    public function get json():String
+    {
+        return JSON.stringify(this);
     }
 
     public function toString():String

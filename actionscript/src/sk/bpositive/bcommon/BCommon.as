@@ -8,7 +8,6 @@ import flash.system.Capabilities;
 import flash.utils.ByteArray;
 
 import sk.bpositive.bcommon.common.CRC32;
-
 import sk.bpositive.bcommon.common.ExtensionWrapper;
 
 public class BCommon extends EventDispatcher {
@@ -18,7 +17,7 @@ public class BCommon extends EventDispatcher {
     private static const IOS_NOTIFICATION_MESSAGE_ID:String = "gcm.message_id";
     private static const IOS_NOTIFICATION_REF:String = "ref";
     
-    public static const VERSION:String = "1.3.0";
+    public static const VERSION:String = "1.5.0";
     public static const EXTENSION_ID:String = "sk.bpositive.BCommon";
     private var m_extensionContext:ExtensionWrapper;
 
@@ -63,11 +62,11 @@ public class BCommon extends EventDispatcher {
         return m_extensionContext.isSupported;
     }
 
-    public function setLogEnabled(as3Log:Boolean, nativeLog:Boolean):void
+    public function setLogEnabled(as3Log:Boolean, nativeLog:Boolean, debugLog:Boolean = false):void
     {
         m_logEnabled = as3Log;
         m_nativeLogEnabled = nativeLog;
-        m_extensionContext.call(NativeMethods.SET_NATIVE_LOG_ENABLED, nativeLog);
+        m_extensionContext.call(NativeMethods.SET_NATIVE_LOG_ENABLED, nativeLog, debugLog);
     }
 
     /**
@@ -98,6 +97,18 @@ public class BCommon extends EventDispatcher {
         }
     }
 
+    /**
+     * Gets advertising id.
+     * IDFA on iOS
+     * AAID on Android
+     * AmazonAdID on Amazon
+     * Result it returned by BCommonEvent.AD_IDENTIFIER.
+     */
+    public function getAdId():void
+    {
+        m_extensionContext.call(NativeMethods.GET_AD_ID);
+    }
+
     public function getIDFA():BCommonIDFA
     {
         if (isIOS()) {
@@ -110,11 +121,66 @@ public class BCommon extends EventDispatcher {
         }
     }
 
+    /**
+     * Returns Amazon Advertising ID in same format as AAID in BCommonEvent.
+     *
+     * Json format of data:
+     * <code>
+     *  {
+     *      "type": "AmazonAdID",
+     *      "error": "error message",   [not be present if there is NO error]
+     *      "id": "xxx",                [not be present if there is error]
+     *      "trackingEnabled": true     [not be present if there is error]
+     *  }
+     * </code>
+     *
+     * @return
+     */
+    public function getAmazonAdID():String
+    {
+        if (isAndroid()){
+
+            var json:String = m_extensionContext.call(NativeMethods.GET_AMAZON_AD_ID);
+            return json;
+        }
+        return null;
+    }
+
     public function getAAID():void
     {
         if (isAndroid()) {
 
             m_extensionContext.call(NativeMethods.GET_AAID);
+        }
+    }
+
+    /**
+     * Returns manifest data from meta-data tag.
+     *
+     * <meta-data
+     *   android:name="com.pixelfederation.meta.CUSTOM_METADATA"
+     *   android:value="Some metadata" />
+     *
+     * @param name
+     */
+    public function getManifestMetadata(name:String):void
+    {
+        if (isAndroid()) {
+
+            m_extensionContext.call(NativeMethods.GET_MANIFEST_METADATA, name);
+        }
+    }
+
+    /**
+     * Returns resource string.
+     *
+     * @param id
+     */
+    public function getResourceString(id:String):void
+    {
+        if (isAndroid()) {
+
+            m_extensionContext.call(NativeMethods.GET_RESOURCE_STRING, id);
         }
     }
 
@@ -126,27 +192,13 @@ public class BCommon extends EventDispatcher {
         }
     }
 
-    /**
-     * @deprecated Use only with old GCM.
-     * @param senderId
-     */
-    public function registerGCM(senderId:String):void
-    {
-        if (isAndroid()) {
-
-            m_extensionContext.call(NativeMethods.REGISTER_GCM, senderId);
-        }
-    }
-
     public function canOpenSettings():Boolean
     {
         if (isIOS()) {
 
-            var canOpenSettings:Boolean = m_extensionContext.call(NativeMethods.CAN_OPEN_SETTINGS) as Boolean;
-            return canOpenSettings;
-        } else {
-            return null;
+            return m_extensionContext.call(NativeMethods.CAN_OPEN_SETTINGS) as Boolean;
         }
+        return false;
     }
 
     public function openSettings():void
@@ -161,11 +213,10 @@ public class BCommon extends EventDispatcher {
     {
         if (isIOS()) {
 
-            var remoteNotificationsEnabled:Boolean = m_extensionContext.call(NativeMethods.IS_REMOTE_NOTIFICATION_ENABLED) as Boolean;
-            return remoteNotificationsEnabled;
-        } else {
-            return false;
+            return m_extensionContext.call(NativeMethods.IS_REMOTE_NOTIFICATION_ENABLED) as Boolean;
         }
+
+        return false;
     }
 
     public function getInstallerPackageName():String
@@ -173,9 +224,9 @@ public class BCommon extends EventDispatcher {
         if (isAndroid()) {
 
             return m_extensionContext.call(NativeMethods.GET_INSTALLER_PACKAGE_NAME) as String;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function immersiveMode(isSticky:Boolean = true):Boolean
@@ -183,9 +234,9 @@ public class BCommon extends EventDispatcher {
         if (isAndroid()) {
 
             return m_extensionContext.call(NativeMethods.IMMERSIVE_MODE, isSticky) as Boolean;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -226,8 +277,7 @@ public class BCommon extends EventDispatcher {
     }
 
     /**
-     * Inits firebase. 
-     * Note: Must be called on iOS. Should be called on Android to init google analytics.
+     * Inits firebase. Must be called for proper functionality.
      */
     public function initFirebase():void
     {
@@ -270,6 +320,27 @@ public class BCommon extends EventDispatcher {
     }
 
     /**
+     * Gets data about notification which started this app in json format.
+     *
+     * JSON format:
+     * <code>
+     *  {
+     *      "messageId": "0:1514369100381481%c8c9da34c8c9da34",
+     *      "ref": null,
+     *      "action": "start",
+     *      "actionTime": "1514369750421"
+     *  }
+     * </code>
+     *
+     * @return Last notification data
+     */
+    public function getNotificationDataJson():String
+    {
+        var data:NotificationData = getNotificationData();
+        return data == null ? null : data.json;
+    }
+
+    /**
      * Computes crc32 of data byte array.
      * @param data
      * @return
@@ -284,6 +355,14 @@ public class BCommon extends EventDispatcher {
         }
     }
 
+    /**
+     * EXPERIMENTAL Do not use.
+     * @param crc
+     * @param data
+     * @param offset
+     * @param length
+     * @return
+     */
     public function xcrc32(crc:uint, data:ByteArray, offset:uint = 0, length:uint = 0):uint
     {
         length = length == 0 ? data.length : length;
@@ -313,13 +392,19 @@ public class BCommon extends EventDispatcher {
         }
     }
 
+    /**
+     * Returns device information for Android.
+     * Contains: bootloader, manufacturer, model, brand, hardware, board, device, product, display, id, fingerprint
+     * from Build and codename, incremental, release and sdk_int from Build.VERSION.
+     * @return JSON string
+     */
     public function getDeviceInfoJson():String
     {
         if (isAndroid()) {
             return m_extensionContext.call(NativeMethods.DEVICE_INFO);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function call(functionName:String, ... args):*
@@ -333,89 +418,44 @@ public class BCommon extends EventDispatcher {
     // 																						 //
     // --------------------------------------------------------------------------------------//
 
-    private function onStatus(event:StatusEvent):void
-    {
-        trace(event.code, event.level);
-
-        var dataArr:Array;
-        var callbackName:String;
-        var callback:Function;
-        var data:Object;
+    private function onStatus(event:StatusEvent):void {
 
         if (event.code == "LOGGING") // Simple log message
         {
             // NOTE: logs from native should go only to as3 log
             as3Log(event.level, "NATIVE");
         }
-        else if(event.code == "NOTIFICATION")
-        {
-            try {
-                data = JSON.parse(event.level);
+        else {
 
-                if(data.hasOwnProperty("type")){
+            as3Log("Event name: " + event.code + ", data:" + event.level, "AS3");
+            dispatchEvent(new BCommonEvent(event.code, event.level));
+        }
 
-                    var type:String = data["type"];
-                    if(type == "MEMORY_WARNING"){
+        // backward compatibility only if we have listeners for that
+        if (hasEventListener(BCommonAAIDEvent.AAID_COMPLETED) || hasEventListener(BCommonAAIDEvent.AAID_FAILED)){
 
-                        log("NOTIFICATION: MEMORY_WARNING");
-                        if(hasEventListener(BCommonEvent.MEMORY_WARNING)){
+            if (event.code == BCommonEvent.AD_IDENTIFIER) {
 
-                            dispatchEvent(new BCommonEvent(BCommonEvent.MEMORY_WARNING, false, false));
-                        }
+                log("Generating backward compatibility AAID events");
+
+                var aaidEvent:BCommonAAIDEvent;
+
+                if (event.level == null || event.level == "") {
+                    aaidEvent = new BCommonAAIDEvent(BCommonAAIDEvent.AAID_FAILED, false, false);
+                    aaidEvent.error = BCommonErrorObject.create("Empty JSON.", "Empty JSON.");
+                } else {
+                    var aaidData:Object = JSON.parse(event.level);
+                    if (aaidData.hasOwnProperty("error")) {
+                        aaidEvent = new BCommonAAIDEvent(BCommonAAIDEvent.AAID_FAILED, false, false);
+                        aaidEvent.error = BCommonErrorObject.create(aaidData["error"], aaidData["error"]);
+                    } else {
+                        aaidEvent = new BCommonAAIDEvent(BCommonAAIDEvent.AAID_COMPLETED, false, false);
+                        aaidEvent.aaid = BCommonAAID.createFromJSON(event.level);
                     }
                 }
+
+                dispatchEvent(aaidEvent);
             }
-            catch (e:Error) {
-                log("ERROR - INVALID NOTIFICATION RECEIVED! raw:" + event.level + " error:" + e);
-            }
-        }
-        else if(event.code.indexOf("AAID") != -1)
-        {
-            dataArr = event.code.split("_");
-            var aaidEvent:BCommonAAIDEvent;
-            if(dataArr[1] == "COMPLETED"){
-
-                if(hasEventListener(BCommonAAIDEvent.AAID_COMPLETED)){
-
-                    aaidEvent = new BCommonAAIDEvent(BCommonAAIDEvent.AAID_COMPLETED, false, false);
-                    aaidEvent.aaid = BCommonAAID.createFromJSON(event.level);
-                    dispatchEvent(aaidEvent);
-                }
-            }else if(dataArr[1] == "FAILED"){
-
-                if(hasEventListener(BCommonAAIDEvent.AAID_FAILED)){
-
-                    aaidEvent = new BCommonAAIDEvent(BCommonAAIDEvent.AAID_FAILED, false, false);
-                    aaidEvent.error = BCommonErrorObject.createFromJSON(event.level);
-                    dispatchEvent(aaidEvent);
-                }
-            }
-        }
-        else if(event.code.indexOf("GCM") != -1)
-        {
-            dataArr = event.code.split("_");
-            var gcmEvent:BCommonGCMEvent;
-            if(dataArr[1] == "TOKEN"){
-
-                if(hasEventListener(BCommonGCMEvent.TOKEN)){
-
-                    gcmEvent = new BCommonGCMEvent(BCommonGCMEvent.TOKEN, false, false);
-                    gcmEvent.token = event.level;
-                    dispatchEvent(gcmEvent);
-                }
-            }else if(dataArr[1] == "ERROR"){
-
-                if(hasEventListener(BCommonGCMEvent.ERROR)){
-
-                    gcmEvent = new BCommonGCMEvent(BCommonGCMEvent.ERROR, false, false);
-                    gcmEvent.error = BCommonErrorObject.createFromJSON(event.level);
-                    dispatchEvent(gcmEvent);
-                }
-            }
-        }
-        else if(event.code == "FCM_TOKEN")
-        {
-            dispatchEvent(new BCommonEvent(BCommonEvent.FCM_TOKEN));
         }
     }
 
@@ -443,7 +483,7 @@ public class BCommon extends EventDispatcher {
     {
         if (isSupported) {
 
-            m_extensionContext.call('nativeLog', message);
+            m_extensionContext.native_call('nativeLog', message);
         }
     }
 }

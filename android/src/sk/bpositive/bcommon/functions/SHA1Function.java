@@ -1,19 +1,25 @@
 package sk.bpositive.bcommon.functions;
 
-import com.adobe.fre.*;
+import com.adobe.fre.FREByteArray;
+import com.adobe.fre.FREContext;
+import com.adobe.fre.FREInvalidObjectException;
+import com.adobe.fre.FREObject;
+import com.adobe.fre.FREWrongThreadException;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SHA1Function implements FREFunction {
+public class SHA1Function extends BaseFunction {
 
     @Override
-    public FREObject call(FREContext freContext, FREObject[] freObjects) {
+    public FREObject call(FREContext context, FREObject[] args) {
+
+        super.call(context, args);
 
         try {
-            FREByteArray byteArray = (FREByteArray) freObjects[0];
+            FREByteArray byteArray = (FREByteArray) args[0];
 
             byteArray.acquire();
 

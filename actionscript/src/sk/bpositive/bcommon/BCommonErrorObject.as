@@ -1,4 +1,8 @@
 package sk.bpositive.bcommon {
+
+/**
+ * @deprecated
+ */
 public class BCommonErrorObject {
 
     private var _error:String;

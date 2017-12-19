@@ -30,6 +30,8 @@
 		2EC5A13A1B9D7F5700335CC3 /* BCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 2EC5A1391B9D7F5700335CC3 /* BCommon.h */; };
 		2EC5A13B1B9D7FD600335CC3 /* BCommon-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = E25E190A18525A56005798D2 /* BCommon-Prefix.pch */; };
 		2ECCAB521EFA62EF0013EA02 /* FirebaseDynamicLinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2ECCAB511EFA62EF0013EA02 /* FirebaseDynamicLinks.framework */; };
+		44AC2A306BDF5E04143E6542 /* BCommonEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 44AC2F1EE5DCC3475DAD39C0 /* BCommonEvents.h */; };
+		44AC2DDB51222D25603508E3 /* BCommonEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 44AC2D91818C3E760B6A1595 /* BCommonEvents.m */; };
 		4AAA25071703433600ECB60C /* FlashRuntimeExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4AAA25061703433600ECB60C /* FlashRuntimeExtensions.h */; };
 		5A98569C15213BC3003A8EB0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A98569B15213BC3003A8EB0 /* Foundation.framework */; };
 		5A9856A215213BC3003A8EB0 /* BCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A9856A115213BC3003A8EB0 /* BCommon.m */; };
@@ -62,6 +64,8 @@
 		2EB172991B77DE920074351E /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2EC5A1391B9D7F5700335CC3 /* BCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCommon.h; sourceTree = "<group>"; };
 		2ECCAB511EFA62EF0013EA02 /* FirebaseDynamicLinks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseDynamicLinks.framework; path = frameworks/FirebaseDynamicLinks.framework; sourceTree = "<group>"; };
+		44AC2D91818C3E760B6A1595 /* BCommonEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCommonEvents.m; sourceTree = "<group>"; };
+		44AC2F1EE5DCC3475DAD39C0 /* BCommonEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCommonEvents.h; sourceTree = "<group>"; };
 		4AAA25061703433600ECB60C /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = ../FlashRuntimeExtensions.h; sourceTree = "<group>"; };
 		4AAA25371704F1C400ECB60C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4AAA253A1704F1C400ECB60C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -108,6 +112,8 @@
 				5A98569D15213BC3003A8EB0 /* BCommon */,
 				5A98569A15213BC3003A8EB0 /* Frameworks */,
 				5A98569915213BC3003A8EB0 /* Products */,
+				44AC2D91818C3E760B6A1595 /* BCommonEvents.m */,
+				44AC2F1EE5DCC3475DAD39C0 /* BCommonEvents.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -182,6 +188,7 @@
 				2E152CEC1ED30ED3008B429B /* Firebase.h in Headers */,
 				2E0420901BB423B200DEBE7B /* FREConversionUtil2.h in Headers */,
 				2E0420891BB41E2700DEBE7B /* BCommonAPI.h in Headers */,
+				44AC2A306BDF5E04143E6542 /* BCommonEvents.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +247,7 @@
 				2E0420871BB41E0F00DEBE7B /* BCommonAPI.m in Sources */,
 				5A9856A215213BC3003A8EB0 /* BCommon.m in Sources */,
 				2E0420911BB423B200DEBE7B /* FREConversionUtil2.m in Sources */,
+				44AC2DDB51222D25603508E3 /* BCommonEvents.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,7 +309,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "";
 				INSTALL_PATH = ../;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = BCommon;
@@ -325,7 +333,7 @@
 				GCC_PREFIX_HEADER = "BCommon/BCommon-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = ../;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = BCommon;

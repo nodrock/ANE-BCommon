@@ -1,3 +1,6 @@
 build.config
 bin
 .gradle
+build/android-profile
+.idea/libraries
+build/intermediates/lint-cache

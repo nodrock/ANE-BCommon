@@ -19,6 +19,7 @@
 #import <zlib.h>
 #import <CommonCrypto/CommonDigest.h>
 #import "Firebase.h"
+#import "BCommonEvents.h"
 
 DEFINE_ANE_FUNCTION(isSupported)
 {
@@ -132,6 +133,23 @@ DEFINE_ANE_FUNCTION(getLanguageCode)
     return [FREConversionUtil2 fromString:languageCode];
 }
 
+DEFINE_ANE_FUNCTION(getAdId)
+{
+    NSString* idString = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    BOOL advertisingTrackingEnabled = [[ASIdentifierManager sharedManager] isAdvertisingTrackingEnabled];
+
+    NSString* json = [BCommon jsonStringFromObject:
+            @{
+                    @"type": @"IDFA",
+                    @"id": idString,
+                    @"trackingEnabled": (advertisingTrackingEnabled ? @YES : @NO)
+            } andPrettyPrint:true];
+
+    [[BCommon sharedInstance] dispatchEvent:BCOMMON_EVENT_AD_IDENTIFIER withData:json];
+
+    return [FREConversionUtil2 fromString:json];
+}
+
 DEFINE_ANE_FUNCTION(getIDFA)
 {
     NSString* idString = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
@@ -179,20 +197,7 @@ DEFINE_ANE_FUNCTION(isRemoteNotificationsEnabled)
 {
     UIApplication *application = [UIApplication sharedApplication];
 
-    BOOL remoteNotificationsEnabled;
-
-    // For IOS >= 8 use isRegisteredForRemoteNotifications
-    if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)])
-    {
-        UIUserNotificationType notificationType = [[application currentUserNotificationSettings] types];
-        remoteNotificationsEnabled = [application isRegisteredForRemoteNotifications] && (notificationType & UIUserNotificationTypeAlert);
-    }
-    // For IOS <= 7 use enabledRemoteNotificationTypes
-    else
-    {
-        UIRemoteNotificationType types = [application enabledRemoteNotificationTypes];
-        remoteNotificationsEnabled = types & UIRemoteNotificationTypeAlert;
-    }
+    BOOL remoteNotificationsEnabled = [application isRegisteredForRemoteNotifications];
     
     return [FREConversionUtil2 fromBoolean:remoteNotificationsEnabled];
 }
@@ -220,7 +225,7 @@ DEFINE_ANE_FUNCTION(showSplashView)
     [BCommon log:@"showSplashView: %@", splashView];
     
     [keyWindow addSubview:splashView];
-    
+
     return nil;
 }
 

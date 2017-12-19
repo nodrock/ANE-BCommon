@@ -45,7 +45,13 @@ public class ExtensionWrapper extends EventDispatcher{
 			trace("Context is not initialized or wrong platform! Can't call function: " + functionName);
 			return null;
 		}
-		return _extensionContext["call"].apply(_extensionContext, [functionName].concat(args));
+		var result:* = null;
+		try {
+			result = _extensionContext["call"].apply(_extensionContext, [functionName].concat(args));
+		} catch (e:Error) {
+			trace("Method call failed!", e);
+		}
+		return result;
 	}
 
 	public function native_call(functionName:String, ... args):*
@@ -54,7 +60,13 @@ public class ExtensionWrapper extends EventDispatcher{
 			trace("Context is not initialized or wrong platform! Can't call function: " + functionName);
 			return null;
 		}
-		return _extensionContext["call"].apply(_extensionContext, [functionName].concat(args));
+        var result:* = null;
+        try {
+            result = _extensionContext["call"].apply(_extensionContext, [functionName].concat(args));
+        } catch (e:Error) {
+            trace("Method call failed!", e);
+        }
+		return result;
 	}
 
 	public function dispose():void

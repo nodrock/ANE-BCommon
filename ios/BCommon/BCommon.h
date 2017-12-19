@@ -22,7 +22,8 @@
 
 + (id)sharedInstance;
 
-- (void)dispatchEvent:(NSString *)event withMessage:(NSString *)message;
+- (void)dispatchEvent:(NSString *)event;
+- (void)dispatchEvent:(NSString *)event withData:(NSString *)data;
 + (void)log:(NSString *)string, ...;
 + (void)nativeLog:(NSString *)message withPrefix:(NSString *)prefix;
 + (NSString*) jsonStringFromObject:(id)obj andPrettyPrint:(BOOL) prettyPrint;
