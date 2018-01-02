@@ -38,8 +38,12 @@ public class GetAAIDFunction extends BaseFunction {
 				catch (IllegalStateException | GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException | IOException e) {
 
 					e.printStackTrace();
-					BCommonExtension.context.dispatchEvent(BCommonEvents.AD_IDENTIFIER, createErrorJson(e.getMessage()));
+					String msg = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+					BCommonExtension.context.dispatchEvent(BCommonEvents.AD_IDENTIFIER, createErrorJson(msg));
 				}
+
+				// TODO: we should process GooglePlayServicesRepairableException and let user install or update GPS
+				// see https://developers.google.com/android/reference/com/google/android/gms/common/GoogleApiAvailability.html#getErrorDialog(android.app.Activity, int, int)
 			}
 		});
 

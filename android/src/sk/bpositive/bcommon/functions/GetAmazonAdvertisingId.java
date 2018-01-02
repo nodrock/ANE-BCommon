@@ -1,6 +1,7 @@
 package sk.bpositive.bcommon.functions;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
 
@@ -26,7 +27,8 @@ public class GetAmazonAdvertisingId extends BaseFunction {
         String jsonResult;
 
         try {
-            ContentResolver contentResolver = context.getActivity().getContentResolver();
+            Context ctx = context.getActivity().getApplicationContext();
+            ContentResolver contentResolver = ctx.getContentResolver();
 
             // get user's tracking preference
             limitAdTracking = Secure.getInt(contentResolver, "limit_ad_tracking") != 0;
