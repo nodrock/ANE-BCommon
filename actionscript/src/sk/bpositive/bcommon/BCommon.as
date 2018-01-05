@@ -17,7 +17,7 @@ public class BCommon extends EventDispatcher {
     private static const IOS_NOTIFICATION_MESSAGE_ID:String = "gcm.message_id";
     private static const IOS_NOTIFICATION_REF:String = "ref";
     
-    public static const VERSION:String = "1.5.1";
+    public static const VERSION:String = "1.5.2";
     public static const EXTENSION_ID:String = "sk.bpositive.BCommon";
     private var m_extensionContext:ExtensionWrapper;
 
