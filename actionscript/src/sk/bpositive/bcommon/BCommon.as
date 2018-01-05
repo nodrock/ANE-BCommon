@@ -337,7 +337,7 @@ public class BCommon extends EventDispatcher {
     public function getNotificationDataJson():String
     {
         var data:NotificationData = getNotificationData();
-        return data == null ? null : data.json;
+        return data == null ? null : JSON.stringify(data);
     }
 
     /**

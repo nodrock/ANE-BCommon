@@ -25,11 +25,6 @@ public class NotificationData {
         return null;
     }
 
-    public function get json():String
-    {
-        return JSON.stringify(this);
-    }
-
     public function toString():String
     {
         return "NotificationData{messageId=" + String(messageId) + ",ref=" + String(ref) + ",action=" + String(action) + ",actionTime=" + String(actionTime) + "}";
