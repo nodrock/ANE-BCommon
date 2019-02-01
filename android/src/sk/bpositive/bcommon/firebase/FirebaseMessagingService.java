@@ -33,12 +33,12 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 import sk.bpositive.bcommon.BCommonExtension;
 import sk.bpositive.bcommon.R;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
-
-    private final int NOTIFICATION_ID = 1;
 
     // [START receive_message]
     @Override
@@ -58,124 +58,129 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         BCommonExtension.log("Data: " + message.getData());
         BCommonExtension.log("Notification: " + message.getNotification());
 
-        if (message.getData() != null && message.getData().size() > 0) {
+        if (message.getData() == null || message.getData().size() == 0)
+        {
+            // no data
+            return;
+        }
 
-            String ref = message.getData().get("ref");
+        NotificationPayload payload = new NotificationPayload(message.getData());
 
-            String notificationData = message.getData().get("notification_data");
-            NotificationPayload payload = parseNotificationData(notificationData);
+        // ignore processing if payload.body is not there (this is the only required param)
+        if (payload.body == null){
+            return;
+        }
 
-            // ignore processing if payload is not there
-            if (payload == null){
-                return;
-            }
-
-            // don't show notification if app is active and notification is not forced
-            if (BCommonExtension.isAppActive && !payload.forceShow){
-                BCommonExtension.log("Notification ignored because app is in foreground!");
-                return;
-            }
-
-            // content intent
-            Intent intent = new Intent(this, NotificationActivity.class);
-            intent.setAction(NotificationActivity.START_ACTION);
-            intent.putExtra(NotificationActivity.EXTRA_MESSAGE_ID, messageId);
-            intent.putExtra(NotificationActivity.EXTRA_REF, ref);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                    PendingIntent.FLAG_ONE_SHOT);
-
-            // delete intent
-            Intent deleteIntent = new Intent(this, NotificationActivity.class);
-            deleteIntent.setAction(NotificationActivity.DELETE_ACTION);
-            deleteIntent.putExtra(NotificationActivity.EXTRA_MESSAGE_ID, messageId);
-            deleteIntent.putExtra(NotificationActivity.EXTRA_REF, ref);
-            PendingIntent deletePendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, deleteIntent,
-                    PendingIntent.FLAG_ONE_SHOT);
-
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
-                    .setSmallIcon(Utils.getSmallIconId(context, payload.smallIcon))
-                    .setContentTitle(Utils.getTitle(context, payload.title))
-                    .setContentText(payload.body)
-                    .setTicker(payload.body)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setDeleteIntent(deletePendingIntent)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(payload.body));
-
-            int notificationDefaults = 0;
-
-            Integer accentColor = Utils.safeGetColorFromHex(payload.smallIconAccentColor);
-            if(accentColor != null)
-            {
-                notificationBuilder.setColor(accentColor);
-            }
-
+        int notificationId = 0;
+        if (payload.notificationId != null){
             try {
-                notificationBuilder.setVisibility(payload.lockScreenVisibility);
-            } catch (Throwable t) {
-                BCommonExtension.debug("Cannot set lockScreenVisibility.", t);
+                notificationId = Integer.parseInt(payload.notificationId);
+            } catch (Exception ex) {
+                BCommonExtension.log("Wrong notificationId -> using default 0.");
             }
+        }
 
-            Bitmap largeIcon = Utils.getLargeIcon(context, payload.largeIcon);
-            if (largeIcon != null) {
-                notificationBuilder.setLargeIcon(largeIcon);
-            }
+        // don't show notification if app is active and notification is not forced
+        if (BCommonExtension.isAppActive && !payload.forceShow){
+            BCommonExtension.log("Notification ignored because app is in foreground!");
+            return;
+        }
 
-            Bitmap bigPictureIcon = Utils.getBitmap(context, payload.bigPicture);
-            if (bigPictureIcon != null) {
-               notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bigPictureIcon).setSummaryText(payload.body));
-            }
+        // content intent
+        Intent intent = new Intent(this, NotificationActivity.class);
+        intent.setAction(NotificationActivity.START_ACTION);
+        intent.putExtra(NotificationActivity.EXTRA_MESSAGE_ID, messageId);
+        intent.putExtra(NotificationActivity.EXTRA_REF, payload.ref);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
 
-            if(!"".equals(payload.sound)) {
-                Uri soundUri = Utils.getSoundUri(context, payload.sound);
-                if (soundUri != null) {
-                    notificationBuilder.setSound(soundUri);
-                } else {
-                    notificationDefaults |= Notification.DEFAULT_SOUND;
-                }
-            }
+        // delete intent
+        Intent deleteIntent = new Intent(this, NotificationActivity.class);
+        deleteIntent.setAction(NotificationActivity.DELETE_ACTION);
+        deleteIntent.putExtra(NotificationActivity.EXTRA_MESSAGE_ID, messageId);
+        deleteIntent.putExtra(NotificationActivity.EXTRA_REF, payload.ref);
+        PendingIntent deletePendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, deleteIntent,
+                PendingIntent.FLAG_ONE_SHOT);
 
-            if(!"".equals(payload.vibrate)) {
-                notificationDefaults |= Notification.DEFAULT_VIBRATE;
-            }
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
+                .setSmallIcon(Utils.getSmallIconId(context, payload.smallIcon))
+                .setContentTitle(Utils.getTitle(context, payload.title))
+                .setContentText(payload.body)
+                .setTicker(payload.body)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setDeleteIntent(deletePendingIntent)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(payload.body));
 
-            if(payload.backgroundImage != null)
-            {
-                BCommonExtension.debug("Creating background image!");
-                try {
-                    addBackgroundImage(payload, notificationBuilder, getApplicationContext());
-                } catch (Throwable t) {
-                    BCommonExtension.debug("Failed!", t);
-                }
-            }
+        int notificationDefaults = 0;
 
-            notificationBuilder.setDefaults(notificationDefaults);
+        Integer accentColor = Utils.safeGetColorFromHex(payload.smallIconAccentColor);
+        if(accentColor != null)
+        {
+            notificationBuilder.setColor(accentColor);
+        }
 
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        try {
+            notificationBuilder.setVisibility(payload.lockScreenVisibility);
+        } catch (Throwable t) {
+            BCommonExtension.debug("Cannot set lockScreenVisibility.", t);
+        }
 
-            if (payload.group != null) {
-                notificationManager.notify(payload.group, NOTIFICATION_ID, notificationBuilder.build());
+        Bitmap largeIcon = Utils.getLargeIcon(context, payload.largeIcon);
+        if (largeIcon != null) {
+            notificationBuilder.setLargeIcon(largeIcon);
+        }
+
+        Bitmap bigPictureIcon = Utils.getBitmap(context, payload.bigPicture);
+        if (bigPictureIcon != null) {
+           notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bigPictureIcon).setSummaryText(payload.body));
+        }
+
+        if(!"".equals(payload.sound)) {
+            Uri soundUri = Utils.getSoundUri(context, payload.sound);
+            if (soundUri != null) {
+                notificationBuilder.setSound(soundUri);
             } else {
-                notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+                notificationDefaults |= Notification.DEFAULT_SOUND;
             }
+        }
+
+        if(!"".equals(payload.vibrate)) {
+            notificationDefaults |= Notification.DEFAULT_VIBRATE;
+        }
+
+        if(payload.backgroundImage != null)
+        {
+            BCommonExtension.debug("Creating background image!");
+            try {
+                addBackgroundImage(payload, notificationBuilder, getApplicationContext());
+            } catch (Throwable t) {
+                BCommonExtension.debug("Failed!", t);
+            }
+        }
+
+        notificationBuilder.setDefaults(notificationDefaults);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (notificationManager == null)
+        {
+            BCommonExtension.log("Can't get NotificationManager!");
+            return;
+        }
+
+        if (payload.group != null) {
+            notificationManager.notify(payload.group, notificationId, notificationBuilder.build());
+        } else {
+            notificationManager.notify(notificationId, notificationBuilder.build());
         }
     }
     // [END receive_message]
 
-    private NotificationPayload parseNotificationData(String jsonData)
+    private NotificationPayload parseNotificationData(Map<String, String> data)
     {
-        if (jsonData == null){
-            return null;
-        }
-        try {
-            JSONObject json = new JSONObject(jsonData);
-            return new NotificationPayload(json);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return new NotificationPayload(data);
     }
 
     private static void addBackgroundImage(NotificationPayload notificationPayload, NotificationCompat.Builder notifBuilder, Context context)
@@ -187,20 +192,20 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         Bitmap bg_image = null;
         if (notificationPayload.backgroundImage != null)
         {
-            bg_image = Utils.getBitmap(context, notificationPayload.backgroundImage.image);
+            bg_image = Utils.getBitmap(context, notificationPayload.backgroundImage);
         }
         if (bg_image != null)
         {
             int viewId = R.layout.pixel_bgimage_notif_layout;
-            if(notificationPayload.backgroundImage.customView != null) {
-                viewId = context.getResources().getIdentifier(notificationPayload.backgroundImage.customView, "layout", context.getPackageName());
+            if(notificationPayload.customView != null) {
+                viewId = context.getResources().getIdentifier(notificationPayload.customView, "layout", context.getPackageName());
             }
 
             RemoteViews customView = new RemoteViews(context.getPackageName(), viewId);
             customView.setTextViewText(R.id.pixel_bgimage_notif_title, Utils.getTitle(context, notificationPayload.title));
             customView.setTextViewText(R.id.pixel_bgimage_notif_body, notificationPayload.body);
-            setTextColor(customView, R.id.pixel_bgimage_notif_title, notificationPayload.backgroundImage.titleColor);
-            setTextColor(customView, R.id.pixel_bgimage_notif_body, notificationPayload.backgroundImage.bodyColor);
+            setTextColor(customView, R.id.pixel_bgimage_notif_title, notificationPayload.titleColor);
+            setTextColor(customView, R.id.pixel_bgimage_notif_body, notificationPayload.bodyColor);
 
             Bitmap largeIcon = Utils.getLargeIcon(context, notificationPayload.largeIcon);
             if (largeIcon != null) {
@@ -208,9 +213,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             }
 
             String alignSetting = null;
-            if (notificationPayload.backgroundImage.imageAlign != null)
+            if (notificationPayload.backgroundImageAlign != null)
             {
-                alignSetting = notificationPayload.backgroundImage.imageAlign;
+                alignSetting = notificationPayload.backgroundImageAlign;
             }
 
             if ("right".equals(alignSetting))

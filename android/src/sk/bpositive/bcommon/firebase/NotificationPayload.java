@@ -4,6 +4,8 @@ import android.app.Notification;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 /**
  * Created by jhorvath on 14/12/2017.
  */
@@ -21,49 +23,37 @@ public class NotificationPayload {
     public String group;
     public int lockScreenVisibility;
     public boolean forceShow;
-    public BackgroundImage backgroundImage;
+    public String ref;
+
+    public String backgroundImage;
+    public String backgroundImageAlign;
+    public String customView;
+    public String titleColor;
+    public String bodyColor;
 
     public NotificationPayload() {
     }
 
-    public NotificationPayload(JSONObject jsonObject) {
-        this.notificationId = jsonObject.optString("notificationId", null);
-        this.title = jsonObject.optString("title", null);
-        this.body = jsonObject.optString("body");
-        this.smallIcon = jsonObject.optString("smallIcon", null);
-        this.largeIcon = jsonObject.optString("largeIcon", null);
-        this.bigPicture = jsonObject.optString("bigPicture", null);
-        this.smallIconAccentColor = jsonObject.optString("smallIconAccentColor", null);
-        this.sound = jsonObject.optString("sound", null);
-        this.vibrate = jsonObject.optString("vibrate", null);
-        this.group = jsonObject.optString("group", null);
-        this.lockScreenVisibility = jsonObject.optInt("lockScreenVisibility", Notification.VISIBILITY_PUBLIC);
-        this.forceShow = jsonObject.optBoolean("forceShow", false);
-        String backgroundImageString = jsonObject.optString("backgroundImage", null);
-        if (backgroundImageString != null) {
-            try {
-                JSONObject backgroundImageJson = new JSONObject(backgroundImageString);
-                this.backgroundImage = new BackgroundImage(backgroundImageJson);
-            } catch (Throwable t) {}
-        }
-    }
+    public NotificationPayload(Map<String, String> data) {
+        this.notificationId = data.get("notificationId");
+        this.title = data.get("title");
+        this.body = data.get("body");
+        this.smallIcon = data.get("smallIcon");
+        this.largeIcon = data.get("largeIcon");
+        this.bigPicture = data.get("bigPicture");
+        this.smallIconAccentColor = data.get("smallIconAccentColor");
+        this.sound = data.get("sound");
+        this.vibrate = data.get("vibrate");
+        this.group = data.get("group");
+        this.lockScreenVisibility = data.get("lockScreenVisibility") == null ? Notification.VISIBILITY_PUBLIC : Integer.parseInt(data.get("lockScreenVisibility"));
+        this.forceShow = data.get("forceShow") == null ? false : Boolean.getBoolean(data.get("forceShow"));
+        this.ref = data.get("ref");
 
-    public class BackgroundImage {
-        public String customView;
-        public String image;
-        public String imageAlign;
-        public String titleColor;
-        public String bodyColor;
-
-        public BackgroundImage() {
-        }
-
-        public BackgroundImage(JSONObject jsonObject) {
-            this.customView = jsonObject.optString("customView", null);
-            this.image = jsonObject.optString("image", null);
-            this.imageAlign = jsonObject.optString("imageAlign", null);
-            this.titleColor = jsonObject.optString("titleColor", null);
-            this.bodyColor = jsonObject.optString("bodyColor", null);
-        }
+        // flat structure for custom view
+        this.backgroundImage = data.get("backgroundImage");
+        this.backgroundImageAlign = data.get("backgroundImageAlign");
+        this.customView = data.get("customView");
+        this.titleColor = data.get("titleColor");
+        this.bodyColor = data.get("bodyColor");
     }
 }
