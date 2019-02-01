@@ -42,6 +42,8 @@ public class BCommonExtensionContext extends FREContext
 		functions.put("getAmazonAdID", new GetAmazonAdvertisingId());
 		functions.put("getAdId", new GetAdvertisingId());
 
+		functions.put("cancelAllNotifications", new CancelAllNotificationsFunction());
+
 		// Debug
 		functions.put("nativeLog", new NativeLogFunction());
 		functions.put("setNativeLogEnabled", new SetNativeLogEnabledFunction());

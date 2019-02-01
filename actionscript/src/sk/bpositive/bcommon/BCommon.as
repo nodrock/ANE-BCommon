@@ -172,6 +172,17 @@ public class BCommon extends EventDispatcher {
     }
 
     /**
+     * Cancel all notifications.
+     */
+    public function cancelAllNotifications():void
+    {
+        if (isAndroid()) {
+
+            m_extensionContext.call(NativeMethods.CANCEL_ALL_NOTIFICATIONS);
+        }
+    }
+
+    /**
      * Returns resource string.
      *
      * @param id
