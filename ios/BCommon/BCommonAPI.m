@@ -11,6 +11,51 @@
 #import "BCommonAPIFunctions.h"
 #import "BCommon.h"
 
+//#import <UIKit/UIApplication.h>
+//
+//#import <objc/runtime.h>
+//#import <objc/message.h>
+//
+//typedef void (^ RestorationHandler)(NSArray*);
+//
+//// Reports app open from a Universal Link for iOS 9
+//static IMP __bcommon_original_continueUserActivity_Imp;
+//BOOL continueUserActivity(id self, SEL _cmd, UIApplication* application, NSUserActivity* userActivity, RestorationHandler restorationHandler) {
+//    NSLog(@"BCommon.continueUserActivity");
+//    NSLog(@"x: %@", self);
+//    NSLog(@"x: %@", userActivity.activityType);
+//    NSLog(@"x: %@", userActivity.title);
+//    NSLog(@"x: %@", userActivity.requiredUserInfoKeys);
+//    NSLog(@"x: %@", userActivity.userInfo);
+//    NSLog(@"x: %@", userActivity.referrerURL);
+////    [[AppsFlyerTracker sharedTracker] continueUserActivity:userActivity restorationHandler:restorationHandler];
+//    return ((BOOL(*)(id,SEL,UIApplication*,NSUserActivity*, RestorationHandler))__bcommon_original_continueUserActivity_Imp)(self, _cmd, application, userActivity, restorationHandler);
+//}
+//// Reports app open from deeplink for iOS 8 or below (DEPRECATED)
+//static IMP __bcommon_original_openURLDeprecated_Imp;
+//BOOL openURLDeprecated(id self, SEL _cmd, UIApplication* application, NSURL* url, NSString* sourceApplication, id annotation) {
+//    NSLog(@"BCommon.openURLDeprecated");
+//    NSLog(@"BCommon.openURLDeprecated: %@ %@ %@ %@", self, sourceApplication, url, annotation);
+////    [[AppsFlyerTracker sharedTracker] handleOpenURL:url sourceApplication:sourceApplication withAnnotation:annotation];
+//    return ((BOOL(*)(id, SEL, UIApplication*, NSURL*, NSString*, id))__bcommon_original_openURLDeprecated_Imp)(self, _cmd, application, url, sourceApplication, annotation);
+//}
+//// Reports app open from deeplink for iOS 10
+//static IMP __bcommon_original_openURL_Imp;
+//BOOL openURL(id self, SEL _cmd, UIApplication* application, NSURL* url, NSDictionary * options) {
+//    NSLog(@"BCommon.openURL");
+//    NSLog(@"BCommon.openURL: %@ %@ %@", self, url, options);
+////    [[AppsFlyerTracker sharedTracker] handleOpenUrl:url options:options];
+//    return ((BOOL(*)(id, SEL, UIApplication*, NSURL*, NSDictionary*))__bcommon_original_openURL_Imp)(self, _cmd, application, url, options);
+//}
+//
+//static IMP __bcommon_original_didReceiveRemoteNotification_Imp;
+//BOOL didReceiveRemoteNotificationHandler(id self, SEL _cmd, UIApplication* application, NSDictionary* userInfo) {
+//    NSLog(@"BCommon.didReceiveRemoteNotification");
+//    NSLog(@"BCommon.didReceiveRemoteNotification: %@", self);
+////    [[AppsFlyerTracker sharedTracker] handlePushNotification:userInfo];
+//    return ((BOOL(*)(id, SEL, UIApplication*, NSDictionary*))__bcommon_original_didReceiveRemoteNotification_Imp)(self, _cmd, application, userInfo);
+//}
+
 void BCommonInitializer(void** extDataToSet, FREContextInitializer* ctxInitializerToSet, FREContextFinalizer* ctxFinalizerToSet)
 {
     *extDataToSet = NULL;
@@ -30,6 +75,27 @@ void BCommonFinalizer(void *extData)
 void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx,
                                uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
+//    UIApplication *application = UIApplication.sharedApplication;
+//
+//    id delegate = application.delegate;
+//
+//    Class objectClass = object_getClass(delegate);
+//
+//    SEL originalContinueUserActivitySelector = @selector(application:continueUserActivity:restorationHandler:);
+//    SEL originalOpenURLDeprecatedSelector = @selector(application:openURL:sourceApplication:annotation:);
+//    SEL originalOpenURLSelector = @selector(application:openURL:options:);
+//    SEL originalDidReceiveRemoteNotificationSelector = @selector(application:didReceiveRemoteNotification:);
+//
+//    Method originalContinueUserActivityMethod = class_getInstanceMethod(objectClass, originalContinueUserActivitySelector);
+//    Method originalOpenURLDeprecatedMethod = class_getInstanceMethod(objectClass, originalOpenURLDeprecatedSelector);
+//    Method originalOpenURLMethod = class_getInstanceMethod(objectClass, originalOpenURLSelector);
+//    Method originalDidReceiveRemoteNotificationMethod = class_getInstanceMethod(objectClass, originalDidReceiveRemoteNotificationSelector);
+//
+//    __bcommon_original_continueUserActivity_Imp = method_setImplementation(originalContinueUserActivityMethod, (IMP)continueUserActivity);
+//    __bcommon_original_openURLDeprecated_Imp = method_setImplementation(originalOpenURLDeprecatedMethod, (IMP)openURLDeprecated);
+//    __bcommon_original_openURL_Imp = method_setImplementation(originalOpenURLMethod, (IMP)openURL);
+//    __bcommon_original_didReceiveRemoteNotification_Imp = method_setImplementation(originalDidReceiveRemoteNotificationMethod, (IMP)didReceiveRemoteNotificationHandler);
+
     NSDictionary *functions = @{
                                 @"isSupported":                     [NSValue valueWithPointer:&BCOMMON(isSupported)],
                                 
@@ -87,5 +153,3 @@ void BCommonContextFinalizer(FREContext ctx)
 {
     [[NSNotificationCenter defaultCenter]removeObserver:[BCommon sharedInstance] name:UIApplicationDidReceiveMemoryWarningNotification object:[UIApplication sharedApplication]];
 }
-
-
