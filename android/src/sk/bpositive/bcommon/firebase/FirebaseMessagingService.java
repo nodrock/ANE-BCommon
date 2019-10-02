@@ -17,14 +17,18 @@
 package sk.bpositive.bcommon.firebase;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.text.TextUtilsCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -35,14 +39,27 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
+import sk.bpositive.bcommon.BCommonEvents;
 import sk.bpositive.bcommon.BCommonExtension;
 import sk.bpositive.bcommon.R;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
+    @Override
+    public void onNewToken(String token) {
+        super.onNewToken(token);
+        BCommonExtension.log("FCM_TOKEN changed: " + token);
+
+        if(BCommonExtension.context != null) {
+            BCommonExtension.context.token = token;
+            BCommonExtension.context.dispatchEvent(BCommonEvents.FCM_TOKEN, token);
+        }
+    }
+
     // [START receive_message]
     @Override
     public void onMessageReceived(RemoteMessage message) {
+        final String NOTIFICATION_CHANNEL_ID = "default";
 
         Context context = getApplicationContext();
 
@@ -102,7 +119,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         PendingIntent deletePendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, deleteIntent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext(), NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(Utils.getSmallIconId(context, payload.smallIcon))
                 .setContentTitle(Utils.getTitle(context, payload.title))
                 .setContentText(payload.body)
@@ -136,7 +153,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
            notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bigPictureIcon).setSummaryText(payload.body));
         }
 
-        if(!"".equals(payload.sound)) {
+        if(!TextUtils.isEmpty(payload.sound)) {
             Uri soundUri = Utils.getSoundUri(context, payload.sound);
             if (soundUri != null) {
                 notificationBuilder.setSound(soundUri);
@@ -145,7 +162,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             }
         }
 
-        if(!"".equals(payload.vibrate)) {
+        if(!TextUtils.isEmpty(payload.vibrate)) {
             notificationDefaults |= Notification.DEFAULT_VIBRATE;
         }
 
@@ -170,9 +187,25 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             return;
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
+                BCommonExtension.log("Creating default channel!");
+                NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "default", NotificationManager.IMPORTANCE_DEFAULT);
+
+                // Configure the notification channel.
+//            notificationChannel.setDescription("Channel description");
+//            notificationChannel.enableLights(true);
+//            notificationChannel.setLightColor(Color.RED);
+//            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+//            notificationChannel.enableVibration(true);
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+        }
+
         if (payload.group != null) {
             notificationManager.notify(payload.group, notificationId, notificationBuilder.build());
         } else {
+            BCommonExtension.log("Showing notification! id=" + notificationId);
             notificationManager.notify(notificationId, notificationBuilder.build());
         }
     }

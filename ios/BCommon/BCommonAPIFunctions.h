@@ -42,3 +42,4 @@ DEFINE_ANE_FUNCTION(unzipFile);
 DEFINE_ANE_FUNCTION(initFirebase);
 DEFINE_ANE_FUNCTION(registerForRemoteNotifications);
 DEFINE_ANE_FUNCTION(getFCMToken);
+DEFINE_ANE_FUNCTION(getMemorySize);

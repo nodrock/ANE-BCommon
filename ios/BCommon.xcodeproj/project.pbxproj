@@ -340,6 +340,7 @@
 				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
+				"VALID_ARCHS[sdk=*]" = "arm64 armv7 armv7s i386 x86_64";
 			};
 			name = Release;
 		};

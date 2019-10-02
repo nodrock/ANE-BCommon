@@ -1,11 +1,18 @@
 package sk.bpositive.bcommon.functions;
 
+import android.support.annotation.NonNull;
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREObject;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
+import sk.bpositive.bcommon.BCommonEvents;
 import sk.bpositive.bcommon.BCommonExtension;
-import sk.bpositive.bcommon.utils.FREConversionUtil;
 
 public class GetFCMToken extends BaseFunction {
 
@@ -14,10 +21,41 @@ public class GetFCMToken extends BaseFunction {
 
         super.call(context, args);
 
-        String token = FirebaseInstanceId.getInstance().getToken();
-        BCommonExtension.log("FCM_TOKEN: " + token);
+        if (BCommonExtension.context != null && BCommonExtension.context.token != null)
+        {
+            BCommonExtension.log("FCM_TOKEN has token: " + BCommonExtension.context.token);
+            BCommonExtension.context.dispatchEvent(BCommonEvents.FCM_TOKEN, BCommonExtension.context.token);
+            return null;
+        }
 
-        return FREConversionUtil.fromString(token);
+        try {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                @Override
+                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                    if (!task.isSuccessful()) {
+                        BCommonExtension.log("FCM_TOKEN exception: " + task.getException());
+                        return;
+                    }
+
+                    if (task.getResult() == null) {
+                        BCommonExtension.log("FCM_TOKEN should never happend!");
+                        return;
+                    }
+
+                    String token = task.getResult().getToken();
+                    BCommonExtension.log("FCM_TOKEN: " + token);
+                    if (BCommonExtension.context != null) {
+                        BCommonExtension.context.token = token;
+                        BCommonExtension.context.dispatchEvent(BCommonEvents.FCM_TOKEN, token);
+                    }
+                }
+            });
+        }catch (Exception e)
+        {
+            BCommonExtension.log("FCM_TOKEN call exception: " + e.toString());
+        }
+
+        return null;
     }
 
 }

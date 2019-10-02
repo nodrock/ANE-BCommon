@@ -9,6 +9,8 @@ import sk.bpositive.bcommon.functions.*;
 
 public class BCommonExtensionContext extends FREContext
 {
+	public String token = null;
+
 	@Override
 	public void dispose()
 	{
@@ -41,6 +43,7 @@ public class BCommonExtensionContext extends FREContext
 		functions.put("getManifestMetadata", new GetManifestMetadata());
 		functions.put("getAmazonAdID", new GetAmazonAdvertisingId());
 		functions.put("getAdId", new GetAdvertisingId());
+		functions.put("getMemorySize", new GetMemorySize());
 
 		functions.put("cancelAllNotifications", new CancelAllNotificationsFunction());
 

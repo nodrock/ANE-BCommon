@@ -28,8 +28,24 @@
             <arg line="SYMROOT=../build/temp/ios/build/"/>
         </exec>
 
+        <!-- compile the ios simulator lib -->
+        <exec executable="xcodebuild" failonerror="true" dir="../ios/">
+            <arg line="-project ${name}.xcodeproj"/>
+            <arg line="-sdk ${ios.simulatorsdkversion}"/>
+            <arg line="-alltargets"/>
+            <arg line="-configuration Release"/>
+            <arg line="SYMROOT=../build/temp/ios/build/"/>
+        </exec>
+
+        <!-- merge static libs to one and write to output -->
+        <exec executable="lipo" failonerror="true">
+            <arg line="-create -output temp/ios/lib${name}.a"/>
+            <arg line="temp/ios/build/Release-iphoneos/lib${name}.a"/>
+            <arg line="temp/ios/build/Release-iphonesimulator/lib${name}.a"/>
+        </exec>
+
         <!-- copy the ios lib to the base temp ios directory -->
-        <copy file="temp/ios/build/Release-iphoneos/lib${name}.a" todir="temp/ios" overwrite="true"/>
+        <!-- <copy file="temp/ios/build/Release-iphoneos/lib${name}.a" todir="temp/ios" overwrite="true"/> -->
 
         <!-- Copy over required frameworks and libs -->
         <copy todir="temp/ios" overwrite="true">
@@ -38,6 +54,39 @@
 
         <!-- remove the build directory -->
         <delete dir="temp/ios/build/"/>
+    </target>
+
+    <!-- only experimental should not be used -->
+    <target name="ios-simulator" description="Build iOS simulator Library">
+
+        <!-- make the build directory for the objc code -->
+        <mkdir dir="temp/ios-simulator/build/"/>
+
+        <!-- clean the build -->
+        <exec executable="xcodebuild" failonerror="true" dir="../ios/">
+            <arg line="-project ${name}.xcodeproj"/>
+            <arg line="-alltargets clean"/>
+        </exec>
+
+        <!-- compile the ios lib -->
+        <exec executable="xcodebuild" failonerror="true" dir="../ios/">
+            <arg line="-project ${name}.xcodeproj"/>
+            <arg line="-sdk ${ios.simulatorsdkversion}"/>
+            <arg line="-alltargets"/>
+            <arg line="-configuration Release"/>
+            <arg line="SYMROOT=../build/temp/ios-simulator/build/"/>
+        </exec>
+
+        <!-- copy the ios lib to the base temp ios directory -->
+        <copy file="temp/ios-simulator/build/Release-iphonesimulator/lib${name}.a" todir="temp/ios-simulator" overwrite="true"/>
+
+        <!-- Copy over required frameworks and libs -->
+        <copy todir="temp/ios-simulator" overwrite="true">
+            <fileset dir="../ios/frameworks"/>
+        </copy>
+
+        <!-- remove the build directory -->
+        <delete dir="temp/ios-simulator/build/"/>
     </target>
 
     <!-- Android -->

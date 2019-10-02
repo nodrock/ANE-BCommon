@@ -107,7 +107,8 @@ void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                 @"canOpenSettings":                 [NSValue valueWithPointer:&BCOMMON(canOpenSettings)],
                                 @"openSettings":                    [NSValue valueWithPointer:&BCOMMON(openSettings)],
                                 @"isRemoteNotificationsEnabled":    [NSValue valueWithPointer:&BCOMMON(isRemoteNotificationsEnabled)],
-                                
+                                @"getMemorySize":                   [NSValue valueWithPointer:&BCOMMON(getMemorySize)],
+
                                 @"showSplashView":                  [NSValue valueWithPointer:&BCOMMON(showSplashView)],
                                 @"hideSplashView":                  [NSValue valueWithPointer:&BCOMMON(hideSplashView)],
                                 

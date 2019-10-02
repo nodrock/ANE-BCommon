@@ -261,3 +261,10 @@ DEFINE_ANE_FUNCTION(getFCMToken)
     
     return [FREConversionUtil2 fromString:fcmToken];
 }
+
+DEFINE_ANE_FUNCTION(getMemorySize)
+{
+    [BCommon log:@"ANE getMemorySize"];
+
+    return [FREConversionUtil2 fromNumber:@([NSProcessInfo processInfo].physicalMemory)];
+}
