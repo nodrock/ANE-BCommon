@@ -17,7 +17,7 @@ public class BCommon extends EventDispatcher {
     private static const IOS_NOTIFICATION_MESSAGE_ID:String = "gcm.message_id";
     private static const IOS_NOTIFICATION_REF:String = "ref";
     
-    public static const VERSION:String = "1.5.2";
+    public static const VERSION:String = "1.6.0";
     public static const EXTENSION_ID:String = "sk.bpositive.BCommon";
     private var m_extensionContext:ExtensionWrapper;
 
@@ -296,13 +296,21 @@ public class BCommon extends EventDispatcher {
     }
 
     /**
-     * Gets FCM token if it has been already generated. Otherwise returns null.
+     * Gets FCM token. Token is returned by BCommonEvent.FCM_TOKEN event.
      * Note: Always remember to listen to BCommonEvent.FCM_TOKEN for token refreshes.
-     * @return FCM token
      */
-    public function getFCMToken():String
+    public function getFCMToken():void
     {
-        return m_extensionContext.call(NativeMethods.GET_FCM_TOKEN) as String;
+        m_extensionContext.call(NativeMethods.GET_FCM_TOKEN);
+    }
+
+    /**
+     * Gets system memory size (in bytes).
+     * @return system memory size
+     */
+    public function getMemorySize():Number
+    {
+        return m_extensionContext.call(NativeMethods.GET_MEMORY_SIZE) as Number;
     }
 
     /**

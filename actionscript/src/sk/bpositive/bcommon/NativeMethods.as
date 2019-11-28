@@ -26,6 +26,7 @@ public class NativeMethods {
     public static const IMMERSIVE_MODE:String = "immersiveMode";
     public static const GET_MANIFEST_METADATA:String = "getManifestMetadata";
     public static const GET_RESOURCE_STRING:String = "getResourceString";
+    public static const GET_MEMORY_SIZE:String = "getMemorySize";
 
     public static const INIT_FIREBASE:String = "initFirebase";
     public static const GET_FCM_TOKEN:String = "getFCMToken";
