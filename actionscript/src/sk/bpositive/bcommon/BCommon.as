@@ -426,6 +426,15 @@ public class BCommon extends EventDispatcher {
         return null;
     }
 
+    public function copyFileToAndroidFilesDir(sourceUri:String):Boolean
+    {
+        if (isAndroid()) {
+            return m_extensionContext.call(NativeMethods.COPY_FILE, sourceUri);
+        }
+
+        return false;        
+    }
+    
     public function call(functionName:String, ... args):*
     {
         return m_extensionContext.call.apply(m_extensionContext, [functionName].concat(args));

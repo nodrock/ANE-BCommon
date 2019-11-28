@@ -38,5 +38,6 @@ public class NativeMethods {
     public static const SHA1:String = "sha1";
     public static const UPDATE_CRC32:String = "updateCrc32";
     public static const DEVICE_INFO:String = "deviceInfo";
+    public static const COPY_FILE:String = "copyFile";
 }
 }

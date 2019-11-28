@@ -46,6 +46,7 @@ public class BCommonExtensionContext extends FREContext
 		functions.put("getMemorySize", new GetMemorySize());
 
 		functions.put("cancelAllNotifications", new CancelAllNotificationsFunction());
+		functions.put("copyFile", new CopyFileFunction());
 
 		// Debug
 		functions.put("nativeLog", new NativeLogFunction());
