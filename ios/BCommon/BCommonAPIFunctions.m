@@ -258,8 +258,9 @@ DEFINE_ANE_FUNCTION(getFCMToken)
     [BCommon log:@"ANE getFCMToken"];
     NSString *fcmToken = g_notificationController.FCMToken;
     [BCommon log:@"FCM_TOKEN: %@", fcmToken];
+    [[BCommon sharedInstance] dispatchEvent:BCOMMON_EVENT_FCM_TOKEN withData:fcmToken];
     
-    return [FREConversionUtil2 fromString:fcmToken];
+    return nil;
 }
 
 DEFINE_ANE_FUNCTION(getMemorySize)
