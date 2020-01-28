@@ -34,6 +34,12 @@ public class NativeMethods {
     public static const GET_NOTIFICATION_DATA:String = "getNotificationData";
     public static const CANCEL_ALL_NOTIFICATIONS:String = "cancelAllNotifications";
 
+    public static const FIREBASE_LOG_EVENT:String = "firebaseLogEvent";
+    public static const FIREBASE_RESET_ANALYTICS_DATA:String = "firebaseResetAnalyticsData";
+    public static const FIREBASE_SET_CURRENT_SCREEN:String = "firebaseSetCurrentScreen";
+    public static const FIREBASE_SET_USER_ID:String = "firebaseSetUserId";
+    public static const FIREBASE_SET_USER_PROPERTY:String = "firebaseSetUserProperty";
+
     public static const CRC32:String = "crc32";
     public static const SHA1:String = "sha1";
     public static const UPDATE_CRC32:String = "updateCrc32";

@@ -123,7 +123,13 @@ void BCommonContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                 @"getFCMToken":                     [NSValue valueWithPointer:&BCOMMON(getFCMToken)],
                                 
                                 //@"unzipFile":                       [NSValue valueWithPointer:&BCOMMON(unzipFile)],
-                                
+
+                                @"firebaseLogEvent":                [NSValue valueWithPointer:&BCOMMON(firebaseLogEvent)],
+                                @"firebaseResetAnalyticsData":      [NSValue valueWithPointer:&BCOMMON(firebaseResetAnalyticsData)],
+                                @"firebaseSetCurrentScreen":        [NSValue valueWithPointer:&BCOMMON(firebaseSetCurrentScreen)],
+                                @"firebaseSetUserId":               [NSValue valueWithPointer:&BCOMMON(firebaseSetUserId)],
+                                @"firebaseSetUserProperty":         [NSValue valueWithPointer:&BCOMMON(firebaseSetUserProperty)],
+
                                 // Debug
                                 @"nativeLog":                       [NSValue valueWithPointer:&BCOMMON(nativeLog)],
                                 @"setNativeLogEnabled":             [NSValue valueWithPointer:&BCOMMON(setNativeLogEnabled)],

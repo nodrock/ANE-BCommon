@@ -311,7 +311,12 @@ typedef NS_ENUM(NSUInteger, ConversionType)
 }
 
 + (NSDictionary *)toDictionary:(FREObject)object {
-    
+
+    if (object == NULL)
+    {
+        return nil;
+    }
+
     FREObject keys = [FREConversionUtil2 getProperty:@"keys" fromObject:object];
     FREObject types = [FREConversionUtil2 getProperty:@"types" fromObject:object];
     FREObject values = [FREConversionUtil2 getProperty:@"values" fromObject:object];

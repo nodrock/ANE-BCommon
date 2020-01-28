@@ -245,6 +245,61 @@ DEFINE_ANE_FUNCTION(initFirebase)
     return nil;
 }
 
+DEFINE_ANE_FUNCTION(firebaseLogEvent)
+{
+    NSString *eventName = [FREConversionUtil2 toString:argv[0]];
+    NSDictionary *eventParams = [FREConversionUtil2 toDictionary:argv[1]];
+
+    [BCommon log:@"firebaseLogEvent: %@", eventName];
+
+    [FIRAnalytics logEventWithName:eventName parameters:eventParams];
+
+    return nil;
+}
+
+DEFINE_ANE_FUNCTION(firebaseResetAnalyticsData)
+{
+    // TODO: no method for this in Objective C
+    [BCommon log:@"firebaseResetAnalyticsData -> no method in Objective-C for this!"];
+
+    return nil;
+}
+
+DEFINE_ANE_FUNCTION(firebaseSetCurrentScreen)
+{
+    NSString *screenName = [FREConversionUtil2 toString:argv[0]];
+
+    [BCommon log:@"firebaseSetCurrentScreen: %@", screenName];
+
+    [FIRAnalytics setScreenName:screenName screenClass:nil];
+
+    return nil;
+}
+
+DEFINE_ANE_FUNCTION(firebaseSetUserId)
+{
+    NSString *userId = [FREConversionUtil2 toString:argv[0]];
+
+    [BCommon log:@"firebaseSetUserId: %@", userId];
+
+    [FIRAnalytics setUserID:userId];
+
+    return nil;
+}
+
+DEFINE_ANE_FUNCTION(firebaseSetUserProperty)
+{
+    NSString *name = [FREConversionUtil2 toString:argv[0]];
+    NSString *value = [FREConversionUtil2 toString:argv[1]];
+
+    [BCommon log:@"firebaseSetUserProperty: %@: %@", name, value];
+
+    [FIRAnalytics setUserPropertyString:value forName:name];
+
+    return nil;
+}
+
+
 DEFINE_ANE_FUNCTION(registerForRemoteNotifications)
 {
     [BCommon log:@"ANE registerForRemoteNotifications"];

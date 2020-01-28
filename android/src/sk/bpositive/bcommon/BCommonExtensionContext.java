@@ -45,6 +45,12 @@ public class BCommonExtensionContext extends FREContext
 		functions.put("getAdId", new GetAdvertisingId());
 		functions.put("getMemorySize", new GetMemorySize());
 
+		functions.put("firebaseLogEvent", new FirebaseLogEvent());
+		functions.put("firebaseResetAnalyticsData", new FirebaseResetAnalyticsData());
+		functions.put("firebaseSetCurrentScreen", new FirebaseSetCurrentScreen());
+		functions.put("firebaseSetUserId", new FirebaseSetUserId());
+		functions.put("firebaseSetUserProperty", new FirebaseSetUserProperty());
+
 		functions.put("cancelAllNotifications", new CancelAllNotificationsFunction());
 
 		// Debug

@@ -9,6 +9,7 @@ import flash.utils.ByteArray;
 
 import sk.bpositive.bcommon.common.CRC32;
 import sk.bpositive.bcommon.common.ExtensionWrapper;
+import sk.bpositive.bcommon.common.ValueContainer;
 
 public class BCommon extends EventDispatcher {
 
@@ -17,7 +18,7 @@ public class BCommon extends EventDispatcher {
     private static const IOS_NOTIFICATION_MESSAGE_ID:String = "gcm.message_id";
     private static const IOS_NOTIFICATION_REF:String = "ref";
     
-    public static const VERSION:String = "1.6.0";
+    public static const VERSION:String = "1.7.0";
     public static const EXTENSION_ID:String = "sk.bpositive.BCommon";
     private var m_extensionContext:ExtensionWrapper;
 
@@ -293,6 +294,51 @@ public class BCommon extends EventDispatcher {
     public function initFirebase():void
     {
         m_extensionContext.call(NativeMethods.INIT_FIREBASE);
+    }
+
+    /**
+     * Firebase.logEvent
+     * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#logEvent(java.lang.String,%20android.os.Bundle)
+     */
+    public function firebaseLogEvent(eventName:String, eventParams:ValueContainer):void
+    {
+        m_extensionContext.call(NativeMethods.FIREBASE_LOG_EVENT, eventName, eventParams);
+    }
+
+    /**
+     * Firebase.resetAnalyticsData
+     * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#resetAnalyticsData()
+     */
+    public function firebaseResetAnalyticsData():void
+    {
+        m_extensionContext.call(NativeMethods.FIREBASE_RESET_ANALYTICS_DATA);
+    }
+
+    /**
+     * Firebase.setCurrentScreen
+     * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#setCurrentScreen(android.app.Activity,%20java.lang.String,%20java.lang.String)
+     */
+    public function firebaseSetCurrentScreen(screenName:String):void
+    {
+        m_extensionContext.call(NativeMethods.FIREBASE_SET_CURRENT_SCREEN, screenName);
+    }
+
+    /**
+     * Firebase.setUserId
+     * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#setUserId(java.lang.String)
+     */
+    public function firebaseSetUserId(userId:String):void
+    {
+        m_extensionContext.call(NativeMethods.FIREBASE_SET_USER_ID, userId);
+    }
+
+    /**
+     * Firebase.setUserProperty
+     * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#setUserProperty(java.lang.String,%20java.lang.String)
+     */
+    public function firebaseSetUserProperty(name:String, value:String):void
+    {
+        m_extensionContext.call(NativeMethods.FIREBASE_SET_USER_PROPERTY, name, value);
     }
 
     /**

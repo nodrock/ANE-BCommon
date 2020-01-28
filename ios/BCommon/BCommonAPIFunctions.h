@@ -43,3 +43,9 @@ DEFINE_ANE_FUNCTION(initFirebase);
 DEFINE_ANE_FUNCTION(registerForRemoteNotifications);
 DEFINE_ANE_FUNCTION(getFCMToken);
 DEFINE_ANE_FUNCTION(getMemorySize);
+
+DEFINE_ANE_FUNCTION(firebaseLogEvent);
+DEFINE_ANE_FUNCTION(firebaseResetAnalyticsData);
+DEFINE_ANE_FUNCTION(firebaseSetCurrentScreen);
+DEFINE_ANE_FUNCTION(firebaseSetUserId);
+DEFINE_ANE_FUNCTION(firebaseSetUserProperty);
